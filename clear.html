@@ -1,0 +1,9 @@
+<!DOCTYPE html><html><head><meta charset="UTF-8"><title>清除数据</title></head><body>
+<p>已清除登录状态，3秒后跳转回主页...</p>
+<script>
+sessionStorage.removeItem('blogLoggedIn');
+localStorage.removeItem('blogVisitor');
+localStorage.removeItem('blogVisitors');
+setTimeout(function(){location.href='/'},1500);
+</script>
+</body></html>

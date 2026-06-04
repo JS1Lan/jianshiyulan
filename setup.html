@@ -1,0 +1,12 @@
+<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Setup</title></head><body>
+<p>Setting up avatar and background...</p>
+<script>
+const key = 'blogData';
+let data = JSON.parse(localStorage.getItem(key) || '{}');
+if (!data.site) data.site = {};
+data.site.avatar = '小新.jpg';
+data.site.bgImage = '2.png';
+localStorage.setItem(key, JSON.stringify(data));
+document.body.innerHTML = '<h2>Done!</h2><p>Avatar and background image set.</p><p><a href="/">Go to Blog</a> | <a href="/admin.html">Admin</a></p>';
+</script>
+</body></html>

@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>笺事语阑 — 内容管理</title>
+<style>
+:root {
+  --font-body: "Space Grotesk","PingFang SC","Microsoft YaHei",sans-serif;
+  --font-heading: "Archivo","PingFang SC","Microsoft YaHei",sans-serif;
+  --bg:#09090b; --surface:#18181b; --surface2:#27272a; --border:#27272a;
+  --text:#fafafa; --text2:#a1a1aa; --text3:#71717a;
+  --accent:#3b82f6; --accent2:#ec4899; --accent3:#10b981;
+  --card-bg:#18181b; --card-border:#27272a; --danger:#ef4444;
+  --input-bg:#27272a; --input-border:#3f3f46; --success:#10b981;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:var(--font-body);background:var(--bg);color:var(--text);min-height:100vh;line-height:1.6;
+  background-image:radial-gradient(ellipse 55% 40% at 12% 22%,rgba(59,130,246,0.08)0%,transparent 50%),radial-gradient(ellipse 42% 45% at 82% 58%,rgba(236,72,153,0.06)0%,transparent 50%);background-attachment:fixed;}
+.container{max-width:960px;margin:0 auto;padding:20px 16px 80px;}
+
+.header{position:sticky;top:0;z-index:10;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);background:rgba(9,9,11,0.88);border:1px solid var(--border);border-radius:18px;padding:16px 22px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:20px;}
+.header .title{font-size:1.2rem;font-weight:800;letter-spacing:2px;font-family:var(--font-heading);background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;flex:1;min-width:160px;}
+.header .status{font-size:0.65rem;color:var(--success);display:flex;align-items:center;gap:4px;}
+.header .status::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--success);animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+
+.btn{padding:8px 18px;border-radius:14px;border:none;cursor:pointer;font-size:0.8rem;font-weight:500;font-family:var(--font-body);transition:all .2s;white-space:nowrap;}
+.btn:hover{transform:translateY(-1px);}
+.btn-primary{background:var(--accent);color:#fff;}
+.btn-primary:hover{opacity:0.85;}
+.btn-secondary{background:var(--accent2);color:#fff;}
+.btn-outline{background:transparent;border:1px solid var(--border);color:var(--text2);}
+.btn-outline:hover{background:var(--surface2);}
+.btn-danger{background:rgba(239,68,68,0.12);color:var(--danger);border:1px solid rgba(239,68,68,0.25);}
+.btn-sm{padding:5px 12px;font-size:0.68rem;border-radius:10px;}
+.btn-xs{padding:3px 9px;font-size:0.6rem;border-radius:8px;}
+
+.card{background:var(--card-bg);border:1px solid var(--card-border);border-radius:18px;padding:18px 22px;margin-bottom:14px;}
+.section-header{font-size:1rem;font-weight:700;margin-bottom:14px;padding-left:12px;border-left:3px solid var(--accent);font-family:var(--font-heading);}
+
+.form-group{margin-bottom:10px;}
+.form-group label{display:block;font-size:0.72rem;font-weight:500;color:var(--text2);margin-bottom:4px;}
+.form-group label .hint{font-size:0.62rem;color:var(--text3);}
+input[type="text"],input[type="date"],input[type="url"],input[type="number"],textarea,select{width:100%;padding:8px 12px;border-radius:12px;border:1px solid var(--input-border);background:var(--input-bg);color:var(--text);font-size:0.82rem;font-family:var(--font-body);outline:none;transition:border-color .2s;}
+input:focus,textarea:focus,select:focus{border-color:var(--accent);}
+textarea{resize:vertical;min-height:50px;}
+select{cursor:pointer;}
+input[type="checkbox"]{accent-color:var(--accent);width:16px;height:16px;cursor:pointer;}
+
+.row{display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap;}
+.row>*{flex:1;min-width:100px;}
+.col-2{flex:2!important;}.col-3{flex:3!important;}
+
+.list-item{display:flex;align-items:center;gap:8px;padding:10px 12px;border:1px solid var(--border);border-radius:14px;margin-bottom:6px;background:var(--surface);flex-wrap:wrap;}
+.list-item .item-fields{display:flex;gap:6px;flex:1;flex-wrap:wrap;align-items:flex-end;}
+.list-item .item-fields input,.list-item .item-fields select{width:auto;min-width:80px;}
+.list-item .item-actions{display:flex;gap:4px;flex-shrink:0;}
+.empty-state{text-align:center;padding:20px;color:var(--text3);font-size:0.82rem;}
+
+.tabs{display:flex;gap:4px;margin-bottom:14px;flex-wrap:wrap;overflow-x:auto;}
+.tab-btn{padding:8px 16px;border-radius:18px;font-size:0.76rem;cursor:pointer;color:var(--text2);font-weight:500;background:transparent;border:1px solid transparent;transition:all .2s;font-family:var(--font-body);white-space:nowrap;}
+.tab-btn:hover{color:var(--text);background:var(--surface2);}
+.tab-btn.active{background:rgba(59,130,246,0.15);color:var(--accent);font-weight:600;}
+.tab-panel{display:none;}
+.tab-panel.active{display:block;}
+
+/* Crop tool */
+.crop-overlay{position:fixed;inset:0;z-index:100;background:rgba(0,0,0,0.85);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;}
+.crop-overlay.hidden{display:none;}
+.crop-container{position:relative;max-width:90vw;max-height:70vh;overflow:hidden;cursor:crosshair;}
+.crop-container img,.crop-container canvas{max-width:90vw;max-height:70vh;display:block;}
+.crop-rect{position:absolute;border:2px dashed #fff;background:rgba(59,130,246,0.15);pointer-events:none;box-shadow:0 0 0 9999px rgba(0,0,0,0.5);}
+.crop-info{color:#fff;font-size:0.8rem;}
+.crop-actions{display:flex;gap:10px;}
+
+/* Avatar preview */
+.avatar-preview{width:80px;height:80px;border-radius:50%;margin:0 auto 10px;overflow:hidden;background:var(--surface2);display:flex;align-items:center;justify-content:center;border:2px solid var(--border);}
+.avatar-preview img{width:100%;height:100%;object-fit:cover;}
+.avatar-preview span{font-size:0.65rem;color:var(--text3);}
+
+.toast{position:fixed;top:16px;left:50%;transform:translateX(-50%);background:var(--success);color:#fff;padding:8px 22px;border-radius:16px;font-size:0.82rem;font-weight:500;z-index:99;opacity:0;pointer-events:none;transition:opacity .3s;}
+.toast.show{opacity:1;}
+
+.json-section textarea{font-family:"SF Mono","Fira Code","Consolas",monospace;font-size:0.75rem;min-height:200px;background:rgba(0,0,0,0.3);color:var(--accent3);border-color:var(--border);}
+.json-actions{display:flex;gap:8px;margin-top:8px;justify-content:flex-end;}
+
+::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-track{background:transparent;}::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
+
+@media(max-width:640px){.container{padding:10px 8px 60px;}.card{padding:14px;}.header{padding:12px 14px;gap:8px;}.list-item{flex-direction:column;align-items:stretch;}.list-item .item-actions{justify-content:flex-end;}}
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="header">
+  <div class="title">笺事语阑</div>
+  <div class="status" title="修改自动保存到浏览器">已连接本地存储</div>
+  <button class="btn btn-outline" onclick="resetFromJSON()">🔄 重置</button>
+  <button class="btn" style="background:var(--success);color:#fff;font-weight:700;" onclick="manualSave()">💾 保存</button>
+  <button class="btn btn-primary" onclick="exportJSON()">📤 导出 JSON</button>
+</div>
+
+<div class="tabs">
+  <button class="tab-btn active" onclick="switchTab('site')">站点设置</button>
+  <button class="tab-btn" onclick="switchTab('social')">社交链接</button>
+  <button class="tab-btn" onclick="switchTab('articles')">文章</button>
+  <button class="tab-btn" onclick="switchTab('skills')">Skills</button>
+  <button class="tab-btn" onclick="switchTab('game')">游戏</button>
+  <button class="tab-btn" onclick="switchTab('links')">资源链接</button>
+  <button class="tab-btn" onclick="switchTab('featured')">精选</button>
+  <button class="tab-btn" onclick="switchTab('sponsor')">赞助</button>
+  <button class="tab-btn" onclick="switchTab('music')">音乐</button>
+  <button class="tab-btn" onclick="switchTab('announce')">公告</button>
+</div>
+
+<!-- ═══════ 站点设置 ═══════ -->
+<div class="tab-panel active" id="tab-site">
+  <div class="card">
+    <div class="section-header">站点信息</div>
+    <div class="row"><div class="form-group"><label>站点名称</label><input type="text" id="site-name"></div><div class="form-group"><label>英文名称</label><input type="text" id="site-nameEn"></div></div>
+    <div class="form-group"><label>头像 <span class="hint">(点击上传或填入URL)</span></label>
+      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+        <div class="avatar-preview" id="avatarPreview"><span>无头像</span></div>
+        <div style="flex:1;min-width:200px;"><input type="text" id="site-avatar" placeholder="图片URL 或 点击下方上传">
+        <input type="file" id="avatarFileInput" accept="image/*" style="display:none;" onchange="startCrop(this,'avatar',300,300,true)">
+        <button class="btn btn-outline btn-sm" onclick="document.getElementById('avatarFileInput').click()" style="margin-top:4px;">📷 上传图片</button></div>
+      </div>
+    </div>
+    <div class="row"><div class="form-group"><label>建站日期</label><input type="date" id="site-startDate"></div><div class="form-group"><label>默认主题</label><select id="site-theme"><option value="dark">暗色</option><option value="light">亮色</option></select></div></div>
+    <div class="form-group"><label>个性签名</label><input type="text" id="site-signature"></div>
+    <div class="form-group"><label>英文签名</label><input type="text" id="site-signatureEn"></div>
+    <div class="form-group"><label>背景图 URL</label><input type="text" id="site-bgImage"></div>
+  </div>
+</div>
+
+<!-- ═══════ 社交链接 ═══════ -->
+<div class="tab-panel" id="tab-social">
+  <div class="card">
+    <div class="section-header">社交平台链接 <span class="hint" style="font-weight:400;font-size:0.65rem;">(留空则不显示)</span></div>
+    <div class="row"><div class="form-group"><label>微信</label><input type="text" id="social-wechat"></div><div class="form-group"><label>QQ</label><input type="text" id="social-qq"></div></div>
+    <div class="row"><div class="form-group"><label>邮箱</label><input type="text" id="social-email"></div><div class="form-group"><label>GitHub</label><input type="text" id="social-github" placeholder="https://github.com/xxx"></div></div>
+    <div class="row"><div class="form-group"><label>B站</label><input type="text" id="social-bilibili"></div><div class="form-group"><label>抖音</label><input type="text" id="social-douyin"></div></div>
+  </div>
+</div>
+
+<!-- ═══════ 文章 ═══════ -->
+<div class="tab-panel" id="tab-articles">
+  <div class="card">
+    <div class="section-header">文章管理</div>
+    <div id="articles-list"></div>
+    <button class="btn btn-primary btn-sm" onclick="addArticle()" style="margin-top:8px;">+ 添加文章</button>
+  </div>
+</div>
+
+<!-- ═══════ Skills ═══════ -->
+<div class="tab-panel" id="tab-skills">
+  <div class="card">
+    <div class="section-header">Skills 管理</div>
+    <div id="skills-list"></div>
+    <button class="btn btn-primary btn-sm" onclick="addSkill()" style="margin-top:8px;">+ 添加 Skill</button>
+  </div>
+</div>
+
+<!-- ═══════ 游戏 ═══════ -->
+<div class="tab-panel" id="tab-game">
+  <div class="card">
+    <div class="section-header">三角洲 · 每日密码</div>
+    <div class="form-group"><label>日期</label><input type="date" id="df-date"></div>
+    <div class="form-group"><label>兑换周期</label><input type="text" id="exchange-period" placeholder="如：5/29（周五）10:00 — 6/5（周五）10:00" onchange="autoSave()"></div>
+    <div id="passwords-list"></div>
+    <button class="btn btn-primary btn-sm" onclick="addPassword()" style="margin-top:4px;">+ 添加地图密码</button>
+    <button class="btn btn-outline btn-sm" onclick="addExchangeItem()" style="margin-top:8px;">+ 添加兑换物品</button>
+    <div id="exchange-list"></div>
+  </div>
+</div>
+
+<!-- ═══════ 资源链接 ═══════ -->
+<div class="tab-panel" id="tab-links">
+  <div class="card">
+    <div class="section-header">资源链接</div>
+    <div id="links-groups"></div>
+  </div>
+</div>
+
+<!-- ═══════ 赞助 ═══════ -->
+<div class="tab-panel" id="tab-sponsor">
+  <div class="card">
+    <div class="section-header">赞助设置</div>
+    <div class="form-group"><label><input type="checkbox" id="sponsor-enabled" checked> 启用赞助板块</label></div>
+    <div class="form-group"><label>赞助文案（中）</label><input type="text" id="sponsor-text"></div>
+    <div class="form-group"><label>赞助文案（英）</label><input type="text" id="sponsor-textEn"></div>
+    <div class="row"><div class="form-group"><label>微信赞赏码 URL</label><input type="text" id="sponsor-wechatQR"></div><div class="form-group"><label>支付宝收款码 URL</label><input type="text" id="sponsor-alipayQR"></div></div>
+  </div>
+</div>
+
+<!-- ═══════ 音乐 ═══════ -->
+<div class="tab-panel" id="tab-music">
+  <div class="card">
+    <div class="section-header">音乐播放列表 <span class="hint" style="font-weight:400;font-size:0.65rem;">(MP3文件请手动放入 music/ 文件夹)</span></div>
+    <div id="music-list"></div>
+    <button class="btn btn-primary btn-sm" onclick="addMusic()" style="margin-top:8px;">+ 添加歌曲</button>
+  </div>
+</div>
+
+<!-- ═══════ 精选 ═══════ -->
+<div class="tab-panel" id="tab-featured">
+  <div class="card">
+    <div class="section-header">精选推荐设置</div>
+    <div class="form-group"><label>标题</label><input type="text" id="featured-title" onchange="autoSave()"></div>
+    <div class="form-group"><label>描述</label><input type="text" id="featured-desc" onchange="autoSave()"></div>
+    <div class="row"><div class="form-group"><label>日期</label><input type="date" id="featured-date" onchange="autoSave()"></div><div class="form-group"><label>标签</label><input type="text" id="featured-tag" onchange="autoSave()"></div></div>
+    <p style="font-size:0.62rem;color:var(--text3)">当有文章被标记为"精选"时，自动显示那篇文章。此设置作为兜底内容。</p>
+  </div>
+</div>
+
+<!-- ═══════ 公告 ═══════ -->
+<div class="tab-panel" id="tab-announce">
+  <div class="card">
+    <div class="section-header">站点消息</div>
+    <div class="form-group"><label>消息摘要（显示在横条）</label><input type="text" id="announce-preview" onchange="autoSave()"></div>
+    <div class="form-group"><label>消息详情（点击后弹窗显示）</label><textarea id="announce-detail" rows="4" onchange="autoSave()"></textarea></div>
+  </div>
+</div>
+
+<!-- ═══════ JSON 导出 ═══════ -->
+<div class="card json-section">
+  <div class="section-header">JSON 备份导出</div>
+  <textarea id="jsonOutput" readonly placeholder="点击「导出 JSON」生成备份..."></textarea>
+  <div class="json-actions">
+    <button class="btn btn-outline btn-sm" onclick="exportJSON()">📤 生成 JSON</button>
+    <button class="btn btn-secondary btn-sm" id="copyBtn" onclick="copyJSON()">📋 一键复制</button>
+  </div>
+</div>
+
+</div>
+
+<!-- ═══════ Crop Overlay ═══════ -->
+<div class="crop-overlay hidden" id="cropOverlay">
+  <div class="crop-info" id="cropInfo">拖动鼠标框选裁剪区域</div>
+  <div class="crop-container" id="cropContainer"><canvas id="cropCanvas"></canvas><div class="crop-rect" id="cropRect"></div></div>
+  <div class="crop-actions">
+    <button class="btn btn-primary btn-sm" onclick="confirmCrop()">✅ 确认裁剪</button>
+    <button class="btn btn-outline btn-sm" onclick="cancelCrop()">取消</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ═══════ STATE ═══════ */
+let data = null;
+const STORAGE_KEY = 'blogData';
+const LINK_GROUPS = [{key:'aiResources',label:'AI 资源'},{key:'communities',label:'社区'},{key:'hobbies',label:'兴趣'},{key:'apps',label:'应用'}];
+
+// Crop state
+let cropState = null; // {file, targetInputId, targetW, targetH, circular, img, startX, startY}
+
+function showToast(msg,d){d=d||2000;const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),d);}
+function switchTab(tab){document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));document.querySelector('[onclick="switchTab(\''+tab+'\')"]').classList.add('active');document.getElementById('tab-'+tab).classList.add('active');}
+
+/* ═══════ DATA ═══════ */
+function getDefaultData(){return {site:{name:'笺事语阑',nameEn:'Jianshi Yulan',signature:'',signatureEn:'',startDate:'2026-06-03',avatar:'',bgImage:'',theme:'dark'},social:{wechat:'',qq:'',email:'',bilibili:'',douyin:'',github:''},sponsor:{enabled:true,text:'如果我的分享对你有帮助，欢迎请我喝杯咖啡 ☕',textEn:'If my work helps you, buy me a coffee ☕',wechatQR:'',alipayQR:''},articles:[],skills:[],deltaForce:{date:'',passwords:[{map:'零号大坝',code:'----',bgImage:''},{map:'长弓溪谷',code:'----',bgImage:''},{map:'巴克什',code:'----',bgImage:''},{map:'航天基地',code:'----',bgImage:''},{map:'潮汐监狱',code:'----',bgImage:''}],exchangeItems:[],gunCodes:[]},links:{aiResources:[],communities:[],hobbies:[],apps:[]},playlist:[],featured:{title:'欢迎来到笺事语阑',desc:'这是我的个人博客，分享AI学习笔记、自制Skills、游戏攻略。',date:'2026-06-03',tag:'站点'},announcement:{preview:'博客已就绪，开始记录与分享。',detail:'欢迎来到笺事语阑！'}};}
+
+function loadData(){
+  try{const s=localStorage.getItem(STORAGE_KEY);if(s){data=JSON.parse(s);}}
+  catch(e){console.error(e);}
+  if(!data||!data.site) data=getDefaultData();
+  buildAll();saveData();
+}
+
+async function resetFromJSON(){
+  if(!confirm('确定从 data.json 重置？当前所有修改将被覆盖。')) return;
+  try{const r=await fetch('data.json');if(r.ok){data=await r.json();saveData();buildAll();showToast('已从 data.json 重置');}}
+  catch(e){showToast('重置失败: '+e.message);}
+}
+
+function saveData(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(data));}catch(e){}}
+function autoSave(){collectFormData();saveData();}
+function manualSave(){collectFormData();saveData();showToast('已保存！刷新博客主页即可看到效果',3000);}
+
+/* ═══════ BUILD ═══════ */
+function buildAll(){
+  buildSiteEditor();buildSocialEditor();buildSponsorEditor();buildFeaturedEditor();buildAnnounceEditor();buildArticlesEditor();buildSkillsEditor();buildPasswordsEditor();buildExchangeEditor();buildLinksEditor();buildMusicEditor();
+}
+
+function buildSiteEditor(){
+  const s=data.site||{};
+  document.getElementById('site-name').value=s.name||'';document.getElementById('site-nameEn').value=s.nameEn||'';
+  document.getElementById('site-avatar').value=s.avatar||'';document.getElementById('site-startDate').value=s.startDate||'';
+  document.getElementById('site-theme').value=s.theme||'dark';document.getElementById('site-signature').value=s.signature||'';
+  document.getElementById('site-signatureEn').value=s.signatureEn||'';document.getElementById('site-bgImage').value=s.bgImage||'';
+  updateAvatarPreview(s.avatar||'');
+}
+
+function updateAvatarPreview(url){
+  const p=document.getElementById('avatarPreview');
+  if(url) p.innerHTML='<img src="'+url+'" alt="avatar">';
+  else p.innerHTML='<span>无头像</span>';
+}
+
+function buildSocialEditor(){const s=data.social||{};['wechat','qq','email','bilibili','douyin','github'].forEach(k=>{const el=document.getElementById('social-'+k);if(el)el.value=s[k]||'';});}
+function buildSponsorEditor(){
+  const s=data.sponsor||{};
+  document.getElementById('sponsor-enabled').checked=s.enabled!==false;document.getElementById('sponsor-text').value=s.text||'';
+  document.getElementById('sponsor-textEn').value=s.textEn||'';document.getElementById('sponsor-wechatQR').value=s.wechatQR||'';
+  document.getElementById('sponsor-alipayQR').value=s.alipayQR||'';
+}
+
+function buildArticlesEditor(){
+  const articles=data.articles||[],list=document.getElementById('articles-list');
+  if(!articles.length){list.innerHTML='<div class="empty-state">暂无文章</div>';return;}
+  list.innerHTML=articles.map((a,i)=>
+    '<div class="list-item" style="flex-direction:column;align-items:stretch;gap:8px">'+
+    '<div class="item-fields">'+
+    '<div class="form-group" style="flex:2;min-width:120px;"><label>标题(中)</label><input type="text" class="art-title" value="'+esc(a.title||'')+'" onchange="autoSave()"></div>'+
+    '<div class="form-group" style="flex:2;min-width:120px;"><label>标题(英)</label><input type="text" class="art-titleEn" value="'+esc(a.titleEn||'')+'" onchange="autoSave()"></div>'+
+    '<div class="form-group" style="flex:1;min-width:80px;"><label>标签(中)</label><input type="text" class="art-tag" value="'+esc(a.tag||'')+'" onchange="autoSave()"></div>'+
+    '<div class="form-group" style="flex:1;min-width:80px;"><label>标签(英)</label><input type="text" class="art-tagEn" value="'+esc(a.tagEn||'')+'" onchange="autoSave()"></div>'+
+    '<div class="form-group" style="flex:1;min-width:100px;"><label>日期</label><input type="date" class="art-date" value="'+esc(a.date||'')+'" onchange="autoSave()"></div>'+
+    '<div class="form-group" style="flex:1;min-width:100px;"><label>分类</label><select class="art-category" onchange="autoSave()"><option value="ai"'+(a.category==='ai'?' selected':'')+'>AI笔记</option><option value="skill"'+(a.category==='skill'?' selected':'')+'>Skill</option><option value="log"'+(a.category==='log'?' selected':'')+'>日志</option><option value="template"'+(a.category==='template'?' selected':'')+'>模板</option></select></div>'+
+    '<div class="form-group" style="flex:1;min-width:80px;"><label>精选</label><select class="art-featured" onchange="autoSave()"><option value="">否</option><option value="1"'+(a.featured?' selected':'')+'>是</option></select></div>'+
+    '</div>'+
+    '<div class="form-group" style="margin-bottom:0"><label>描述(中)</label><input type="text" class="art-desc" value="'+esc(a.desc||'')+'" onchange="autoSave()"></div>'+
+    '<div class="form-group" style="margin-bottom:0"><label>描述(英)</label><input type="text" class="art-descEn" value="'+esc(a.descEn||'')+'" onchange="autoSave()"></div>'+
+    '<div class="form-group" style="margin-bottom:0"><label>正文内容 <span class="hint">(支持 Markdown 语法，可插图)</span></label><textarea class="art-content" rows="5" onchange="autoSave()">'+esc(a.content||'')+'</textarea></div>'+
+    '<div class="item-actions" style="justify-content:flex-end"><button class="btn btn-danger btn-xs" onclick="deleteArticle('+i+')">删除</button></div></div>'
+  ).join('');
+}
+function addArticle(){const max=(data.articles||[]).reduce((m,a)=>Math.max(m,a.id||0),0);data.articles.push({id:max+1,title:'',titleEn:'',tag:'',tagEn:'',desc:'',descEn:'',date:new Date().toISOString().slice(0,10),category:'ai',content:'',featured:false});saveData();buildArticlesEditor();showToast('已添加');}
+function deleteArticle(i){if(!confirm('确定删除？'))return;data.articles.splice(i,1);saveData();buildArticlesEditor();showToast('已删除');}
+
+function buildSkillsEditor(){
+  const skills=data.skills||[],list=document.getElementById('skills-list');
+  if(!skills.length){list.innerHTML='<div class="empty-state">暂无 Skills</div>';return;}
+  list.innerHTML=skills.map((s,i)=>
+    '<div class="list-item" style="flex-direction:column;align-items:stretch;gap:8px">'+
+    '<div class="item-fields">'+
+    '<div class="form-group" style="flex:2;min-width:120px;"><label>名称(中)</label><input type="text" class="sk-name" value="'+esc(s.name||'')+'" onchange="autoSave()"></div>'+
+    '<div class="form-group" style="flex:2;min-width:120px;"><label>名称(英)</label><input type="text" class="sk-nameEn" value="'+esc(s.nameEn||'')+'" onchange="autoSave()"></div>'+
+    '<div class="form-group" style="flex:1;min-width:100px;"><label>日期</label><input type="date" class="sk-date" value="'+esc(s.date||'')+'" onchange="autoSave()"></div>'+
+    '<div class="form-group" style="flex:2;min-width:140px;"><label>描述(中)</label><input type="text" class="sk-desc" value="'+esc(s.desc||'')+'" onchange="autoSave()"></div>'+
+    '<div class="form-group" style="flex:2;min-width:140px;"><label>描述(英)</label><input type="text" class="sk-descEn" value="'+esc(s.descEn||'')+'" onchange="autoSave()"></div>'+
+    '</div>'+
+    '<div class="form-group" style="margin-bottom:0"><label>正文内容 <span class="hint">(支持 Markdown，可插图)</span></label><textarea class="sk-content" rows="4" onchange="autoSave()">'+esc(s.content||'')+'</textarea></div>'+
+    '<div class="item-actions" style="justify-content:flex-end"><button class="btn btn-danger btn-xs" onclick="deleteSkill('+i+')">删除</button></div></div>'
+  ).join('');
+}
+function addSkill(){const max=(data.skills||[]).reduce((m,s)=>Math.max(m,s.id||0),0);data.skills.push({id:max+1,name:'',nameEn:'',desc:'',descEn:'',date:new Date().toISOString().slice(0,10),content:''});saveData();buildSkillsEditor();showToast('已添加');}
+function deleteSkill(i){if(!confirm('确定删除？'))return;data.skills.splice(i,1);saveData();buildSkillsEditor();showToast('已删除');}
+
+function buildPasswordsEditor(){
+  if(!data.deltaForce)data.deltaForce={passwords:[],exchangeItems:[],gunCodes:[]};
+  document.getElementById('df-date').value=data.deltaForce.date||'';
+  const pwds=data.deltaForce.passwords||[],list=document.getElementById('passwords-list');
+  if(!pwds.length){list.innerHTML='<div class="empty-state">暂无密码数据，点击下方按钮添加</div>';return;}
+  list.innerHTML=pwds.map((p,i)=>
+    '<div class="list-item"><div class="item-fields">'+
+    '<div class="form-group" style="flex:2;min-width:100px;"><label>地图名</label><input type="text" class="pwd-map" value="'+esc(p.map||'')+'" onchange="autoSave()"></div>'+
+    '<div class="form-group" style="flex:2;min-width:100px;"><label>背景图URL <span class="hint">(可选)</span></label><input type="text" class="pwd-bgImage" value="'+esc(p.bgImage||'')+'" onchange="autoSave()"></div>'+
+    '<div class="form-group" style="flex:1;min-width:80px;"><label>密码(4位)</label><input type="text" class="pwd-code" value="'+esc(p.code||'')+'" onchange="autoSave()" maxlength="4"></div>'+
+    '</div><div class="item-actions"><button class="btn btn-danger btn-xs" onclick="deletePassword('+i+')">删除</button></div></div>'
+  ).join('');
+}
+function addPassword(){if(!data.deltaForce)data.deltaForce={passwords:[],exchangeItems:[],gunCodes:[]};if(!data.deltaForce.passwords)data.deltaForce.passwords=[];data.deltaForce.passwords.push({map:'',code:'----',bgImage:''});saveData();buildPasswordsEditor();showToast('已添加');}
+function deletePassword(i){if(!confirm('确定删除？'))return;data.deltaForce.passwords.splice(i,1);saveData();buildPasswordsEditor();showToast('已删除');}
+
+function buildLinksEditor(){
+  const container=document.getElementById('links-groups');
+  container.innerHTML=LINK_GROUPS.map(g=>{
+    const items=(data.links&&data.links[g.key])||[];
+    let h='<div style="margin-bottom:14px;"><div style="font-size:0.85rem;font-weight:600;margin-bottom:6px;font-family:var(--font-heading);">'+g.label+'</div><div id="links-group-'+g.key+'">';
+    if(!items.length)h+='<div class="empty-state">暂无链接</div>';
+    else items.forEach((lk,li)=>{h+='<div class="list-item"><div class="item-fields"><div class="form-group" style="flex:2;min-width:100px;margin-bottom:0;"><input type="text" class="lk-name" value="'+esc(lk.name||'')+'" placeholder="名称" onchange="autoSave()"></div><div class="form-group" style="flex:2;min-width:100px;margin-bottom:0;"><input type="text" class="lk-desc" value="'+esc(lk.desc||'')+'" placeholder="描述" onchange="autoSave()"></div><div class="form-group" style="flex:1;min-width:60px;margin-bottom:0;"><input type="text" class="lk-icon" value="'+esc(lk.icon||'')+'" placeholder="图标" onchange="autoSave()"></div></div><div class="item-actions"><button class="btn btn-danger btn-xs" onclick="deleteLink(\''+g.key+'\','+li+')">删除</button></div></div>';});
+    h+='<button class="btn btn-outline btn-xs" onclick="addLink(\''+g.key+'\')" style="margin-top:4px;">+ 添加</button></div></div>';
+    return h;
+  }).join('');
+}
+function addLink(key){collectFormData();if(!data.links)data.links={};if(!data.links[key])data.links[key]=[];data.links[key].push({name:'',desc:'',icon:''});saveData();buildLinksEditor();}
+function deleteLink(key,i){if(!confirm('确定删除？'))return;data.links[key].splice(i,1);saveData();buildLinksEditor();}
+
+/* ── Music ── */
+function buildFeaturedEditor(){const f=data.featured||{};document.getElementById('featured-title').value=f.title||'';document.getElementById('featured-desc').value=f.desc||'';document.getElementById('featured-date').value=f.date||'';document.getElementById('featured-tag').value=f.tag||'';}
+function buildAnnounceEditor(){const a=data.announcement||{};document.getElementById('announce-preview').value=a.preview||'';document.getElementById('announce-detail').value=a.detail||'';}
+function buildMusicEditor(){const pl=data.playlist||[],list=document.getElementById('music-list');if(!pl.length){list.innerHTML='<div class="empty-state">暂无歌曲 <br><small>将MP3文件放入 music/ 文件夹</small></div>';return;}list.innerHTML=pl.map((s,i)=>'<div class="list-item"><div class="item-fields"><div class="form-group" style="flex:2;min-width:110px;"><label>文件名</label><input type="text" class="mu-file" value="'+esc(s.file||'')+'" onchange="autoSave()" placeholder="song.mp3"></div><div class="form-group" style="flex:1;min-width:100px;"><label>歌曲名</label><input type="text" class="mu-title" value="'+esc(s.title||'')+'" onchange="autoSave()"></div><div class="form-group" style="flex:1;min-width:90px;"><label>歌手</label><input type="text" class="mu-artist" value="'+esc(s.artist||'')+'" onchange="autoSave()"></div><div class="form-group" style="flex:2;min-width:110px;"><label>封面图URL</label><input type="text" class="mu-cover" value="'+esc(s.cover||'')+'" onchange="autoSave()"></div></div><div class="item-actions"><button class="btn btn-danger btn-xs" onclick="deleteMusic('+i+')">删除</button></div></div>').join('');}
+function buildExchangeEditor(){const items=data.deltaForce&&data.deltaForce.exchangeItems||[],list=document.getElementById('exchange-list');if(!items.length){list.innerHTML='';return;}list.innerHTML='<div style="margin-top:12px;font-weight:600;font-size:0.8rem;">🎁 兑换物品</div>'+items.map((e,i)=>'<div class="list-item"><div class="item-fields"><div class="form-group" style="flex:2;min-width:120px;"><label>名称</label><input type="text" class="ex-name" value="'+esc(e.name||'')+'" onchange="autoSave()"></div><div class="form-group" style="flex:1;min-width:100px;"><label>描述</label><input type="text" class="ex-desc" value="'+esc(e.desc||'')+'" onchange="autoSave()"></div><div class="form-group" style="flex:1;min-width:100px;"><label>所需材料</label><input type="text" class="ex-cost" value="'+esc(e.cost||'')+'" onchange="autoSave()"></div><div class="form-group" style="flex:1;min-width:130px;"><label>开始时间</label><input type="datetime-local" class="ex-start" value="'+esc(e.startDate||'')+'" onchange="autoSave()"></div><div class="form-group" style="flex:1;min-width:130px;"><label>结束时间</label><input type="datetime-local" class="ex-end" value="'+esc(e.endDate||'')+'" onchange="autoSave()"></div></div><div class="item-actions"><button class="btn btn-danger btn-xs" onclick="deleteExchangeItem('+i+')">删除</button></div></div>').join('');}
+function addExchangeItem(){if(!data.deltaForce)data.deltaForce={passwords:[],exchangeItems:[],gunCodes:[]};if(!data.deltaForce.exchangeItems)data.deltaForce.exchangeItems=[];data.deltaForce.exchangeItems.push({name:'',desc:'',cost:'',startDate:'',endDate:''});saveData();buildExchangeEditor();showToast('已添加');}
+function deleteExchangeItem(i){if(!confirm('确定删除？'))return;data.deltaForce.exchangeItems.splice(i,1);saveData();buildExchangeEditor();showToast('已删除');}
+function addMusic(){if(!data.playlist)data.playlist=[];data.playlist.push({file:'',title:'',artist:'',cover:''});saveData();buildMusicEditor();showToast('已添加');}
+function deleteMusic(i){if(!confirm('确定删除？'))return;data.playlist.splice(i,1);saveData();buildMusicEditor();showToast('已删除');}
+
+/* ═══════ COLLECT ═══════ */
+function collectFormData(){
+  if(!data)return null;
+  const s=data.site||{};s.name=val('site-name')||'';s.nameEn=val('site-nameEn')||'';s.avatar=val('site-avatar')||'';s.startDate=val('site-startDate')||'';s.theme=val('site-theme')||'dark';s.signature=val('site-signature')||'';s.signatureEn=val('site-signatureEn')||'';s.bgImage=val('site-bgImage')||'';data.site=s;
+  const so=data.social||{};['wechat','qq','email','bilibili','douyin','github'].forEach(k=>{so[k]=val('social-'+k)||'';});data.social=so;
+  const sp=data.sponsor||{};sp.enabled=!!document.getElementById('sponsor-enabled')?.checked;sp.text=val('sponsor-text')||'';sp.textEn=val('sponsor-textEn')||'';sp.wechatQR=val('sponsor-wechatQR')||'';sp.alipayQR=val('sponsor-alipayQR')||'';data.sponsor=sp;
+
+  data.articles=[];document.querySelectorAll('#articles-list .list-item').forEach((row,i)=>{
+    data.articles.push({id:(data.articles[i]||{}).id||i+1,title:qv(row,'art-title'),titleEn:qv(row,'art-titleEn'),tag:qv(row,'art-tag'),tagEn:qv(row,'art-tagEn'),desc:qv(row,'art-desc'),descEn:qv(row,'art-descEn'),date:qv(row,'art-date'),category:qv(row,'art-category'),content:qv(row,'art-content'),featured:qv(row,'art-featured')==='1'});
+  });
+  data.skills=[];document.querySelectorAll('#skills-list .list-item').forEach((row,i)=>{
+    data.skills.push({id:(data.skills[i]||{}).id||i+1,name:qv(row,'sk-name'),nameEn:qv(row,'sk-nameEn'),desc:qv(row,'sk-desc'),descEn:qv(row,'sk-descEn'),date:qv(row,'sk-date'),content:qv(row,'sk-content')});
+  });
+  if(!data.deltaForce)data.deltaForce={passwords:[],exchangeItems:[],gunCodes:[]};data.deltaForce.date=val('df-date')||'';
+  data.deltaForce.passwords=[];document.querySelectorAll('#passwords-list .list-item').forEach(row=>{const m=qv(row,'pwd-map'),c=qv(row,'pwd-code'),i=qv(row,'pwd-icon');if(m)data.deltaForce.passwords.push({map:m,code:c,icon:i});});
+  if(!data.links)data.links={};LINK_GROUPS.forEach(g=>{data.links[g.key]=[];const ge=document.getElementById('links-group-'+g.key);if(!ge)return;ge.querySelectorAll('.list-item').forEach(row=>{const n=qv(row,'lk-name'),d=qv(row,'lk-desc'),ic=qv(row,'lk-icon');if(n)data.links[g.key].push({name:n,desc:d,icon:ic});});});
+  // Featured
+  data.featured={title:val('featured-title')||'',desc:val('featured-desc')||'',date:val('featured-date')||'',tag:val('featured-tag')||''};
+  // Announcement
+  data.announcement={preview:val('announce-preview')||'',detail:val('announce-detail')||''};
+  // Exchange
+  if(data.deltaForce){data.deltaForce.exchangePeriod=val('exchange-period')||'';data.deltaForce.exchangeItems=[];document.querySelectorAll('#exchange-list .list-item').forEach(row=>{const n=qv(row,'ex-name'),d=qv(row,'ex-desc'),c=qv(row,'ex-cost'),s=qv(row,'ex-start'),e=qv(row,'ex-end');if(n)data.deltaForce.exchangeItems.push({name:n,desc:d,cost:c,startDate:s,endDate:e});});}
+  // Passwords with bgImage
+  if(data.deltaForce){data.deltaForce.passwords=[];document.querySelectorAll('#passwords-list .list-item').forEach(row=>{const m=qv(row,'pwd-map'),c=qv(row,'pwd-code'),b=qv(row,'pwd-bgImage');if(m)data.deltaForce.passwords.push({map:m,code:c,bgImage:b});});}
+  // Playlist with cover
+  data.playlist=[];document.querySelectorAll('#music-list .list-item').forEach(row=>{const f=qv(row,'mu-file'),t=qv(row,'mu-title'),a=qv(row,'mu-artist'),c=qv(row,'mu-cover');if(f)data.playlist.push({file:f,title:t,artist:a,cover:c});});
+  return data;
+}
+function val(id){const el=document.getElementById(id);return el?el.value:'';}
+function qv(row,cls){const el=row.querySelector('.'+cls);return el?el.value:'';}
+
+/* ═══════ EXPORT ═══════ */
+function exportJSON(){collectFormData();if(!data)return;saveData();document.getElementById('jsonOutput').value=JSON.stringify(data,null,2);showToast('JSON 已生成（数据同时自动保存）');}
+function copyJSON(){
+  let text=document.getElementById('jsonOutput').value;if(!text){exportJSON();text=document.getElementById('jsonOutput').value;}if(!text){showToast('没有可复制的 JSON');return;}
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(()=>{const btn=document.getElementById('copyBtn');btn.textContent='✅ 已复制!';setTimeout(()=>btn.textContent='📋 一键复制',2000);showToast('已复制');}).catch(()=>fallbackCopy(text));}
+  else fallbackCopy(text);
+}
+function fallbackCopy(text){const ta=document.getElementById('jsonOutput');ta.removeAttribute('readonly');ta.select();try{document.execCommand('copy');showToast('已复制');}catch(e){showToast('复制失败');}ta.setAttribute('readonly','');}
+
+/* ═══════ IMAGE CROP ═══════ */
+function startCrop(fileInput, targetInputId, targetW, targetH, circular){
+  const file=fileInput.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=function(e){
+    const img=new Image();img.onload=function(){
+      cropState={file:file,targetInputId:targetInputId,targetW:targetW,targetH:targetH,circular:!!circular,img:img,startX:0,startY:0,endX:0,endY:0};
+      const canvas=document.getElementById('cropCanvas'),ctx=canvas.getContext('2d'),container=document.getElementById('cropContainer');
+      const maxW=Math.min(800,window.innerWidth*0.9),scale=Math.min(maxW/img.width,0.8);
+      canvas.width=img.width*scale;canvas.height=img.height*scale;
+      ctx.drawImage(img,0,0,canvas.width,canvas.height);
+      container.style.position='relative';canvas.style.display='block';
+      document.getElementById('cropRect').style.display='none';
+      document.getElementById('cropOverlay').classList.remove('hidden');
+      // Mouse events
+      canvas.onmousedown=function(ev){cropState.startX=ev.offsetX;cropState.startY=ev.offsetY;cropState.endX=ev.offsetX;cropState.endY=ev.offsetY;updateCropRect();canvas.onmousemove=function(ev2){cropState.endX=ev2.offsetX;cropState.endY=ev2.offsetY;updateCropRect();};canvas.onmouseup=function(){canvas.onmousemove=null;canvas.onmouseup=null;};};
+    };img.src=e.target.result;
+  };reader.readAsDataURL(file);
+}
+function updateCropRect(){
+  const r=document.getElementById('cropRect'),cs=cropState;if(!cs)return;
+  const x=Math.min(cs.startX,cs.endX),y=Math.min(cs.startY,cs.endY),w=Math.abs(cs.endX-cs.startX),h=Math.abs(cs.endY-cs.startY);
+  r.style.display='block';r.style.left=x+'px';r.style.top=y+'px';r.style.width=w+'px';r.style.height=h+'px';
+  let info='框选区域: '+Math.round(w)+'×'+Math.round(h);if(cs.targetW&&cs.targetH)info+=' | 目标: '+cs.targetW+'×'+cs.targetH;
+  if(cs.circular)info+=' | 圆形裁剪';
+  document.getElementById('cropInfo').textContent=info;
+}
+function confirmCrop(){
+  if(!cropState)return;const cs=cropState,canvas=document.getElementById('cropCanvas'),x=Math.min(cs.startX,cs.endX),y=Math.min(cs.startY,cs.endY),w=Math.abs(cs.endX-cs.startX),h=Math.abs(cs.endY-cs.startY);
+  if(w<10||h<10){showToast('请框选更大区域');return;}
+  const out=document.createElement('canvas');out.width=cs.targetW||w;out.height=cs.targetH||h;
+  const ctx=out.getContext('2d');
+  if(cs.circular){ctx.beginPath();ctx.arc(out.width/2,out.height/2,out.width/2,0,Math.PI*2);ctx.clip();}
+  const scaleX=canvas.width/cs.img.naturalWidth,scaleY=canvas.height/cs.img.naturalHeight;
+  ctx.drawImage(cs.img,x/scaleX,y/scaleY,w/scaleX,h/scaleY,0,0,out.width,out.height);
+  const dataUrl=out.toDataURL('image/jpeg',0.85);
+  document.getElementById(cs.targetInputId).value=dataUrl;
+  if(cs.targetInputId==='site-avatar')updateAvatarPreview(dataUrl);
+  cancelCrop();autoSave();showToast('图片已裁剪并保存');
+}
+function cancelCrop(){document.getElementById('cropOverlay').classList.add('hidden');cropState=null;document.getElementById('cropCanvas').onmousedown=null;}
+
+function esc(s){if(!s)return'';return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+// Auto-save on any change
+document.addEventListener('input',function(e){if(e.target.closest('.tab-panel.active,.card')){clearTimeout(document._autoSaveT);document._autoSaveT=setTimeout(autoSave,500);}});
+
+document.addEventListener('DOMContentLoaded',loadData);
+</script>
+</body>
+</html>

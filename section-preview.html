@@ -1,0 +1,57 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>板块详情预览</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:"PingFang SC","Microsoft YaHei",sans-serif;background:#0a0a16;color:#e8e8f0;padding:30px 20px;display:flex;gap:30px;flex-wrap:wrap;justify-content:center;min-height:100vh}
+h2{text-align:center;margin-bottom:16px;font-size:1.1rem;color:#a8b8ff;letter-spacing:2px}
+.col{flex:1;min-width:380px;max-width:500px}
+.glass{background:rgba(255,255,255,0.035);border:1px solid rgba(255,255,255,0.1);backdrop-filter:blur(20px);border-radius:16px;padding:18px}
+.btn{display:inline-block;padding:10px 22px;border-radius:20px;font-size:.82rem;cursor:pointer;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.04);color:#b0b0bc;transition:all .2s;margin:4px}
+.btn:hover{border-color:#8b9cf7;color:#a8b8ff}
+.btn.active{background:rgba(139,156,247,0.2);color:#fff;border-color:#8b9cf7}
+.card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:16px;margin-bottom:10px;cursor:pointer;transition:all .2s}
+.card:hover{background:rgba(255,255,255,0.07);border-color:rgba(255,255,255,0.15);transform:translateY(-1px)}
+.card-tag{display:inline-block;font-size:.6rem;padding:2px 8px;border-radius:8px;background:rgba(139,156,247,0.12);color:#8b9cf7;margin-bottom:6px;font-weight:600}
+.card-title{font-size:.9rem;font-weight:700;margin-bottom:4px}
+.card-preview{font-size:.72rem;color:#787888;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.card-meta{display:flex;gap:12px;margin-top:8px;font-size:.65rem;color:#787888;justify-content:space-between}
+.modal-overlay{position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+.modal{background:rgba(18,18,32,.95);border:1px solid rgba(255,255,255,.1);border-radius:18px;width:90%;max-width:650px;max-height:80vh;overflow-y:auto;padding:24px;box-shadow:0 24px 64px rgba(0,0,0,.5)}
+.modal h3{margin-bottom:16px;font-size:1.1rem;border-left:3px solid #8b9cf7;padding-left:12px}
+.close{float:right;cursor:pointer;font-size:1.2rem;color:#787888;background:none;border:none}
+.close:hover{color:#fff}
+.hint{text-align:center;color:#787888;font-size:.7rem;margin-top:10px}
+</style></head><body>
+
+<div class="col"><h2>📋 方案A：弹窗展示</h2>
+<p class="hint">点击板块卡片 → 弹出大窗口 → 显示该分类所有文章</p>
+<div class="glass">
+  <button class="btn active">AI知识笔记</button><button class="btn">Skills</button><button class="btn">学习日志</button><button class="btn">模板备忘</button>
+  <div style="margin-top:16px">
+    <div class="card" onclick="document.getElementById('modalA').style.display='flex'"><span class="card-tag">AI笔记</span><div class="card-title">Prompt 工程模板合集 v2.0</div><div class="card-preview">整理了 Claude Code 中常用的 prompt 模板，包含角色扮演、代码生成、文档撰写等场景。经过一个月实际使用打磨...</div><div class="card-meta"><span>📅 2026-05-28</span><span>💬 3 评论</span></div></div>
+    <div class="card"><span class="card-tag">AI笔记</span><div class="card-title">一文搞懂 RAG：原理与实现</div><div class="card-preview">从检索增强生成的基本概念讲起，逐步深入到向量数据库选型、embedding 模型对比...</div><div class="card-meta"><span>📅 2026-05-08</span><span>💬 8 评论</span></div></div>
+  </div>
+</div>
+<!-- Modal A -->
+<div class="modal-overlay" id="modalA" style="display:none" onclick="if(event.target===this)this.style.display='none'">
+<div class="modal"><button class="close" onclick="this.closest('.modal-overlay').style.display='none'">✕</button><h3>🧠 AI 知识笔记 · 全部文章</h3>
+<div class="card"><span class="card-tag">AI笔记</span><div class="card-title">Prompt 工程模板合集 v2.0</div><div class="card-preview">整理了 Claude Code 中常用的 prompt 模板，包含角色扮演、代码生成、文档撰写等场景。经过一个月实际使用打磨，覆盖了日常开发 90% 的使用场景。</div><div class="card-meta"><span>📅 2026-05-28</span><span>💬 3 评论</span></div></div>
+<div class="card"><span class="card-tag">AI笔记</span><div class="card-title">一文搞懂 RAG：原理与实现</div><div class="card-preview">从检索增强生成的基本概念讲起，逐步深入到向量数据库选型、embedding 模型对比，最后给出一个可运行的完整示例。</div><div class="card-meta"><span>📅 2026-05-08</span><span>💬 8 评论</span></div></div>
+<div class="card"><span class="card-tag">AI笔记</span><div class="card-title">Claude Code Memory 机制深度解析</div><div class="card-preview">Memory 是 Claude Code 最被低估的功能。本文详细解读 Memory 的类型、存储方式和最佳实践。</div><div class="card-meta"><span>📅 2026-04-22</span><span>💬 5 评论</span></div></div>
+</div></div>
+</div>
+
+<div class="col"><h2>📄 方案B：独立页面</h2>
+<p class="hint">点击板块卡片 → 跳转到独立的文章列表页</p>
+<div class="glass">
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.06)">
+    <span style="color:#787888">← 返回首页</span>
+    <span style="font-size:1rem;font-weight:700;margin-left:8px">🧠 AI 知识笔记</span>
+    <span style="font-size:.7rem;color:#787888;margin-left:auto">共 12 篇</span>
+  </div>
+  <div class="card"><span class="card-tag">AI笔记</span><div class="card-title">Prompt 工程模板合集 v2.0</div><div class="card-preview">整理了 Claude Code 中常用的 prompt 模板，包含角色扮演、代码生成、文档撰写等场景。经过一个月实际使用打磨，覆盖了日常开发 90% 的使用场景。</div><div class="card-meta"><span>📅 2026-05-28</span><span>💬 3 评论</span></div></div>
+  <div class="card"><span class="card-tag">AI笔记</span><div class="card-title">一文搞懂 RAG：原理与实现</div><div class="card-preview">从检索增强生成的基本概念讲起，逐步深入到向量数据库选型、embedding 模型对比，最后给出一个可运行的完整示例。</div><div class="card-meta"><span>📅 2026-05-08</span><span>💬 8 评论</span></div></div>
+  <div class="card"><span class="card-tag">AI笔记</span><div class="card-title">Claude Code Memory 机制深度解析</div><div class="card-preview">Memory 是 Claude Code 最被低估的功能。本文详细解读 Memory 的类型、存储方式和最佳实践。</div><div class="card-meta"><span>📅 2026-04-22</span><span>💬 5 评论</span></div></div>
+</div>
+</div>
+
+</body></html>

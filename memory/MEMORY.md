@@ -1,0 +1,6 @@
+- [Default output path](user_default_output_path.md) — generated files go to D:\AI\AI project unless specified otherwise
+- [Chinese language default](language_preference.md) — all generated projects and UI must be in Chinese by default
+- [Vision tool](vision_tool.md) — use vision.js (qwen-vl-max) when Read can't display images; API Key already configured
+- [Install & file organization](install_and_file_organization.md) — 三级分类：项目→D:\AI\AI project，工具→D:\软件\工具，软件→D:\软件；中文路径优先，不兼容时回退英文
+- [Skills ecosystem](skills_ecosystem.md) — superpowers 全部 skills 概览 + vision.js 自定义工具的位置和用法
+- [No local URL previews](feedback_no_local_url.md) — 用户无法打开本地 URL，用 web 预览代替

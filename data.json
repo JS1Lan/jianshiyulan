@@ -1,0 +1,48 @@
+{
+  "site": {
+    "name": "笺事语阑",
+    "nameEn": "Jianshi Yulan",
+    "avatar": "小新.jpg",
+    "signature": "准备得太久，你就没有办法开始",
+    "signatureEn": "Hello, I'm a learner & builder",
+    "startDate": "2026-06-03",
+    "bgImage": "2.png",
+    "theme": "dark"
+  },
+  "social": {
+    "wechat": "",
+    "qq": "",
+    "email": "",
+    "bilibili": "",
+    "douyin": "",
+    "github": ""
+  },
+  "sponsor": {
+    "enabled": true,
+    "wechatQR": "",
+    "alipayQR": "",
+    "text": "如果我的分享对你有帮助，欢迎请我喝杯咖啡 ☕",
+    "textEn": "If my work helps you, buy me a coffee ☕"
+  },
+  "articles": [],
+  "skills": [],
+  "deltaForce": {
+    "date": "2026-06-04",
+    "passwords": [
+      { "map": "零号大坝", "code": "4829", "icon": "🏭" },
+      { "map": "长弓溪谷", "code": "7156", "icon": "🏔" },
+      { "map": "巴克什", "code": "3048", "icon": "🏜" },
+      { "map": "航天基地", "code": "6291", "icon": "🚀" },
+      { "map": "潮汐监狱", "code": "8537", "icon": "🏝" }
+    ],
+    "exchangeItems": [],
+    "exchangePeriod": "",
+    "gunCodes": []
+  },
+  "links": {
+    "aiResources": [],
+    "communities": [],
+    "hobbies": [],
+    "apps": []
+  }
+}

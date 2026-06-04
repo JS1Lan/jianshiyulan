@@ -1,0 +1,97 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>三角洲行动专区</title>
+<style>
+:root{--font:system-ui,"PingFang SC","Microsoft YaHei",sans-serif;--mono:monospace;--r:32px}
+:root{--bg:#030712;--txt:#f1f5f9;--tx2:#94a3b8;--tx3:#64748b;--c1:#06b6d4;--c2:#d946ef;--c3:#3b82f6}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--font);background:var(--bg);color:var(--txt);min-height:100vh;padding:20px;max-width:1100px;margin:0 auto}
+.glass-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);backdrop-filter:blur(40px);border-radius:var(--r);box-shadow:0 8px 32px rgba(0,0,0,.6);padding:22px;margin-bottom:14px}
+.back-link{display:inline-flex;align-items:center;gap:8px;color:var(--c1);text-decoration:none;font-size:.82rem;margin-bottom:20px;cursor:pointer;padding:10px 18px;border-radius:24px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);backdrop-filter:blur(20px);transition:all .25s;font-weight:500;letter-spacing:.5px}
+.back-link:hover{background:rgba(255,255,255,.08);border-color:var(--c1);transform:translateX(-2px)}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.grid-5{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+.pcode{font-size:1.6rem;font-weight:800;letter-spacing:6px;text-align:center;background:linear-gradient(135deg,var(--c1),var(--c3));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.pname{text-align:center;font-size:.8rem;font-weight:700;margin-bottom:4px}
+canvas{display:block;margin:0 auto;max-width:100%}
+.sec-title{font-size:.8rem;font-weight:700;margin-bottom:10px;color:var(--c1)}
+button{padding:8px 18px;border-radius:18px;font-size:.74rem;font-weight:600;cursor:pointer;border:none;font-family:var(--font)}
+.btn-c{background:var(--c1);color:#000}.btn-p{background:var(--c2);color:#fff}
+input{padding:8px 14px;border-radius:16px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04);color:var(--txt);font-size:.76rem;font-family:var(--font);outline:none;width:100%}
+.gun-tag{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:14px;margin:2px;font-size:.68rem;background:rgba(6,182,212,.08);color:var(--c1);cursor:pointer;transition:all .2s}
+.gun-tag:hover{background:rgba(6,182,212,.18)}
+.ex-item{padding:10px 0;border-bottom:1px solid rgba(255,255,255,.05)}.ex-item:last-child{border-bottom:none}
+.ex-name{font-weight:600;font-size:.78rem}.ex-desc{font-size:.64rem;color:var(--tx3);margin-top:2px}.ex-cost{font-size:.66rem;color:var(--c1);margin-top:2px}.ex-time{font-size:.6rem;color:var(--tx3);margin-top:2px}
+.empty{text-align:center;padding:20px;color:var(--tx3);font-size:.75rem}
+@media(max-width:700px){.grid-3,.grid-5{grid-template-columns:1fr 1fr}}
+</style></head><body>
+
+<a href="/" class="back-link" onclick="sessionStorage.setItem('blogLoggedIn','1')">← 返回博客</a>
+<div style="display:flex;align-items:center;gap:14px;margin-bottom:20px"><h1 style="color:var(--c1);font-size:1.2rem;font-weight:800;letter-spacing:1px">三角洲行动专区</h1></div>
+
+<div class="glass-card"><div class="sec-title">🔐 每日密码</div><div style="font-size:.62rem;color:var(--tx3);margin-bottom:12px" id="gameDate">📅 --</div><div class="grid-5" id="pwdGrid"></div></div>
+
+<div class="grid-3">
+<div class="glass-card" style="grid-column:1/3;text-align:center">
+<div class="sec-title">🎰 枪械转转盘</div><div id="gunTags"></div>
+<div style="position:relative;display:inline-block;margin:10px 0">
+<div style="position:absolute;top:-14px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:12px solid transparent;border-right:12px solid transparent;border-top:18px solid var(--c2)"></div>
+<canvas id="rc" width="280" height="280"></canvas></div>
+<div id="rr" style="font-weight:700;color:var(--c1);margin-top:8px">添加枪械后点击转盘</div>
+<div style="display:flex;gap:6px;justify-content:center;margin-top:10px;flex-wrap:wrap">
+<input type="text" id="gi" placeholder="输入枪名" style="max-width:200px"><button class="btn-c" id="ba">添加</button><button class="btn-p" id="bs">🎲 转!</button></div>
+</div>
+<div class="glass-card"><div class="sec-title">🎁 本周兑换</div><div style="font-size:.6rem;color:var(--tx3);margin-bottom:8px" id="exchangePeriod"></div><div id="exchangeList"><div class="empty">暂无兑换物品</div></div></div>
+</div>
+
+<div class="glass-card"><div class="sec-title">🔧 改枪码分享</div><div style="font-size:.64rem;color:var(--tx3);margin-bottom:10px">分类查看改枪方案，点击复制即用</div><div id="gunCodeArea"><div class="empty">暂无改枪码数据</div></div></div>
+
+<script>
+var SITE=null,SK='blogData';
+function esc(s){if(!s)return'';return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+
+// Load data
+function ld(){
+  try{var s=localStorage.getItem(SK);if(s)SITE=JSON.parse(s)}catch(e){}
+  if(!SITE||!SITE.deltaForce)SITE={deltaForce:{date:'',passwords:[{map:'零号大坝',code:'----',bgImage:''},{map:'长弓溪谷',code:'----',bgImage:''},{map:'巴克什',code:'----',bgImage:''},{map:'航天基地',code:'----',bgImage:''},{map:'潮汐监狱',code:'----',bgImage:''}],exchangeItems:[]}};
+  renderAll()
+}
+function renderAll(){
+  var df=SITE.deltaForce;if(!df.passwords||!df.passwords.length)df.passwords=[{map:'零号大坝',code:'----',bgImage:''},{map:'长弓溪谷',code:'----',bgImage:''},{map:'巴克什',code:'----',bgImage:''},{map:'航天基地',code:'----',bgImage:''},{map:'潮汐监狱',code:'----',bgImage:''}];
+  document.getElementById('gameDate').textContent='📅 '+(df.date||'--')+' ｜ 🕐 每日刷新';
+  document.getElementById('pwdGrid').innerHTML=df.passwords.map(function(p){return'<div class="glass-card"><div class="pname">'+esc(p.map||'')+'</div><div class="pcode">'+esc(p.code||'----')+'</div></div>'}).join('');
+  var exl=document.getElementById('exchangePeriod'),exItems=df.exchangeItems||[];exl.textContent=df.exchangePeriod||'';
+  var exList=document.getElementById('exchangeList');if(exItems.length){exList.innerHTML=exItems.map(function(e){return'<div class="ex-item"><div class="ex-name">'+esc(e.name||'')+'</div><div class="ex-desc">'+esc(e.desc||'')+'</div><div class="ex-cost">💰 '+esc(e.cost||'')+'</div><div class="ex-time">⏰ '+(e.startDate||'')+' — '+(e.endDate||'')+'</div></div>'}).join('')}
+  renderGunCodes()
+}
+function renderGunCodes(){
+  var gc=SITE.gunCodes;if(!gc)gc={};
+  var cats=[{key:'rifle',label:'🔫 步枪',color:'#06b6d4'},{key:'smg',label:'💨 冲锋枪',color:'#d946ef'},{key:'sniper',label:'🎯 栓狙',color:'#3b82f6'},{key:'dmr',label:'🔭 连狙',color:'#10b981'}];
+  var area=document.getElementById('gunCodeArea'),hasAny=false;
+  for(var i=0;i<cats.length;i++){var gs=gc[cats[i].key];if(gs&&gs.length){hasAny=true;break}}
+  if(!hasAny){area.innerHTML='<div class="empty">暂无改枪码，去管理后台添加</div>';return}
+  var html='';
+  for(var ci=0;ci<cats.length;ci++){
+    var c=cats[ci],guns=gc[c.key]||[];if(!guns.length)continue;
+    html+='<div style="margin-bottom:12px"><div style="font-weight:700;font-size:.78rem;margin-bottom:6px;color:'+c.color+'">'+c.label+'</div>';
+    for(var gi=0;gi<guns.length;gi++){
+      var g=guns[gi];html+='<div class="glass-card" style="padding:12px 16px;margin-bottom:6px"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px"><span style="font-weight:700;font-size:.8rem">'+esc(g.name||'')+'</span><span style="font-size:.6rem;color:var(--tx3)">'+(g.schemes?g.schemes.length:0)+' 个方案</span></div><div style="display:flex;flex-wrap:wrap;gap:6px">';
+      if(g.schemes)for(var si=0;si<g.schemes.length;si++){var s=g.schemes[si];html+='<span class="gun-tag" onclick="cp(\''+esc(s.code||'')+'\')" title="点击复制">'+esc(s.label||'')+': '+esc(s.code||'')+'</span>'}
+      html+='</div></div>'
+    }html+='</div>'
+  }area.innerHTML=html
+}
+function cp(code){navigator.clipboard.writeText(code).then(function(){alert('已复制: '+code)}).catch(function(){prompt('复制:',code)})}
+
+// Roulette
+var guns=[],ca=0,cl=['#06b6d4','#d946ef','#10b981','#3b82f6','#f59e0b'];
+function dw(){var c=document.getElementById('rc'),ctx=c.getContext('2d'),cx=140,cy=140,r=130;ctx.clearRect(0,0,280,280);
+if(!guns.length){ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.fillStyle='rgba(255,255,255,.03)';ctx.fill();ctx.fillStyle='#64748b';ctx.font='14px system-ui';ctx.textAlign='center';ctx.fillText('请添加枪械',cx,cy+4);return}
+var sa=Math.PI*2/guns.length;for(var i=0;i<guns.length;i++){var s=ca+i*sa,e=s+sa;ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,r,s,e);ctx.fillStyle=cl[i%cl.length];ctx.fill();ctx.save();ctx.translate(cx,cy);ctx.rotate(s+sa/2);ctx.fillStyle='#fff';ctx.font='bold 11px system-ui';ctx.textAlign='center';ctx.fillText(guns[i],r*.62,4);ctx.restore()}ctx.beginPath();ctx.arc(cx,cy,28,0,Math.PI*2);ctx.fillStyle='rgba(3,7,18,.9)';ctx.fill()}
+function ag(){var n=document.getElementById('gi').value.trim();if(!n||guns.includes(n))return;guns.push(n);document.getElementById('gi').value='';rt();dw()}
+function rm(n){guns=guns.filter(function(g){return g!==n});rt();dw()}
+function rt(){document.getElementById('gunTags').innerHTML=guns.map(function(g){return'<span class="gun-tag">'+g+' <span style="cursor:pointer;opacity:.5" onclick="rm(\''+g+'\')">×</span></span>'}).join('')}
+function sp(){if(!guns.length)return;var d=(5+Math.floor(Math.random()*5))*360+Math.random()*360;ca+=d*(Math.PI/180);dw();setTimeout(function(){document.getElementById('rr').textContent='选中：'+guns[Math.floor(Math.random()*guns.length)]},700)}
+ld();dw();document.getElementById('ba').onclick=ag;document.getElementById('bs').onclick=sp;document.getElementById('rc').onclick=sp;
+</script>
+</body></html>
