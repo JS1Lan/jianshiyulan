@@ -305,7 +305,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--txt);min-height:10
 
 <div class="glass-card bu uptime-card c1"><div class="uptime-label">本站已运行时间</div><div class="uptime-clock" id="uptimeClock">0天 00:00:00</div></div>
 
-<div class="glass-card bf" id="featuredCard"><span class="ft-tag">⭐ 精选推荐</span><div class="ft-title" id="featTitle">欢迎来到笺事语阑</div><div class="ft-desc" id="featDesc">分享AI学习笔记、自制Skills、游戏攻略。</div><div class="ft-meta" id="featMeta">📅 2026-06-03</div></div>
+<div class="glass-card bf" id="featuredCard"><span class="ft-tag" data-i18n="featured">⭐ 精选推荐</span><div class="ft-title" id="featTitle"></div><div class="ft-desc" id="featDesc" style="color:var(--tx3)">暂无精选内容</div><div class="ft-meta" id="featMeta"></div></div>
 
 <div class="glass-card bl latest-list"><h4>📄 最新文章</h4><div id="latestList"><div class="empty-mini">还没有文章</div></div></div>
 
@@ -421,7 +421,7 @@ function renderAll(){renderFeatured();renderArticles();renderSectionCards();rend
 function renderFeatured(){
   var articles=siteData.articles||[],fa=articles.find(function(a){return a.featured}),fc=el('featuredCard');
   if(fa){el('featTitle').textContent=fa.title;el('featDesc').textContent=fa.content?fa.content.slice(0,120)+(fa.content.length>120?'...':''):(fa.desc||'');el('featMeta').innerHTML='📅 '+(fa.date||'');fc.style.cursor='pointer';fc.onclick=function(){openArticleDetail('article',fa.id)}}
-  else{var f=siteData.featured;if(f){el('featTitle').textContent=f.title;el('featDesc').textContent=f.desc;el('featMeta').innerHTML='📅 '+(f.date||'');fc.style.cursor='default';fc.onclick=null}}
+  else{el('featTitle').textContent='';el('featDesc').textContent=currentLang==='zh'?'暂无精选内容，去管理后台标记一篇文章为精选吧':'No featured article yet. Mark one in admin panel.';el('featMeta').innerHTML='';fc.style.cursor='default';fc.onclick=null}
 }
 function renderArticles(){
   var articles=siteData.articles||[],latest=articles.slice(0,5),list=el('latestList');
