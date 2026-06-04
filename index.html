@@ -361,7 +361,7 @@ const cls=['#06b6d4','#d946ef','#10b981','#3b82f6','#f59e0b','#ef4444','#8b5cf6'
 async function init(){
   visitor=JSON.parse(localStorage.getItem(VK)||'null');
   try{const s=localStorage.getItem(SK);if(s)siteData=JSON.parse(s);else{const r=await fetch('data.json');if(r.ok){siteData=await r.json();saveData()}}}catch(e){siteData=getDefaultData()}
-  applySiteData();updateUptime();renderAll();if(!inited){inited=true;setInterval(updateUptime,1000);initMusic();drawWheel()}
+  applySiteData();updateUptime();renderAll();updateI18n();if(!inited){inited=true;setInterval(updateUptime,1000);initMusic();drawWheel()}
 }
 function getDefaultData(){return {site:{name:'笺事语阑',signature:'准备得太久，你就没有办法开始',startDate:'2026-06-03',avatar:'',theme:'dark'},social:{},sponsor:{enabled:true,text:'如果我的分享对你有帮助，欢迎请我喝杯咖啡 ☕',textEn:'Buy me a coffee ☕'},articles:[],skills:[],deltaForce:{date:'',passwords:[{map:'零号大坝',code:'----',bgImage:''},{map:'长弓溪谷',code:'----',bgImage:''},{map:'巴克什',code:'----',bgImage:''},{map:'航天基地',code:'----',bgImage:''},{map:'潮汐监狱',code:'----',bgImage:''}],exchangeItems:[]},links:{aiResources:[],communities:[],hobbies:[],apps:[]},playlist:[],featured:{title:'欢迎来到笺事语阑',desc:'分享AI学习笔记、自制Skills、游戏攻略。',date:'2026-06-03',tag:'站点'},announcement:{preview:'博客已就绪',detail:'欢迎来到笺事语阑！'}}}
 function saveData(){try{localStorage.setItem(SK,JSON.stringify(siteData))}catch(e){}}
@@ -402,7 +402,10 @@ el('navBlog').addEventListener('click',function(){showSection('blog')});
 el('navGame').addEventListener('click',function(){window.location.href='game-test.html'});
 el('navWelcome').addEventListener('click',function(){el('sectionPage').classList.add('hidden');el('bentoWrap').classList.add('hidden');el('sec-gamewrap').classList.add('hidden');el('sec-linkswrap').classList.add('hidden');el('welcomeOverlay').classList.remove('hidden');document.body.style.overflow='hidden'});
 el('btnTheme').addEventListener('click',function(){var c=document.documentElement.getAttribute('data-theme'),n=c==='dark'?'light':'dark';document.documentElement.setAttribute('data-theme',n);if(siteData&&siteData.site)siteData.site.theme=n;saveData()});
-el('btnLang').addEventListener('click',function(){currentLang=currentLang==='zh'?'en':'zh';el('btnLang').textContent=currentLang==='zh'?'EN':'中';renderAll();try{localStorage.setItem('blog-lang',currentLang)}catch(e){}});
+var i18nMap={zh:{navBlog:'AI闲谈',navGame:'游戏',navWelcome:'蓬荜生辉',welcomeGreeting:'欢迎光临我的博客',readBlog:'阅读博客',gameBtn:'游戏板块',uptimeLabel:'本站已运行时间',siteMsg:'站点消息',recent:'近期动态',latest:'最新文章',featured:'精选推荐',sponsor:'支持作者',more:'更多 →',lampHint:'下拉金色灯绳，点亮灯光',lampOn:'灯亮了！选头像，填昵称进入'},en:{navBlog:'AI Chat',navGame:'Game',navWelcome:'Welcome',welcomeGreeting:'Welcome to My Blog',readBlog:'Read Blog',gameBtn:'Game Zone',uptimeLabel:'Site Running Time',siteMsg:'Site News',recent:'Recent',latest:'Latest',featured:'Featured',sponsor:'Support Me',more:'More →',lampHint:'Pull cord to turn on light',lampOn:'Light on! Pick avatar & enter'}};
+function t(key){var m=i18nMap[currentLang]||i18nMap.zh;return m[key]||key}
+function updateI18n(){document.querySelectorAll('[data-i18n]').forEach(function(el){el.textContent=t(el.getAttribute('data-i18n'))})}
+el('btnLang').addEventListener('click',function(){currentLang=currentLang==='zh'?'en':'zh';el('btnLang').textContent=currentLang==='zh'?'EN':'中';updateI18n();renderAll();try{localStorage.setItem('blog-lang',currentLang)}catch(e){}});
 el('btnMenu').addEventListener('click',function(){el('mobileNav').classList.toggle('open')});
 
 // ═══════ UPTIME ═══════
@@ -571,8 +574,8 @@ function endDrag(){
   if(!cordDragging)return;cordDragging=false;
   if(cordOrigY>25){turnOn()}else{el('lampHandle').style.transform='translateY(0)'}
 }
-function turnOn(){lampOn=true;el('lampOverlay').classList.add('lamp-on');playSnd(800,.08,'square',.08,0);setTimeout(function(){playSnd(1200,.05,'square',.06,.02)},80);setTimeout(function(){playSnd(60,.5,'sine',.04,.15)},150);el('lampStatus').textContent='灯亮了！选头像，填昵称进入';el('lampHandle').classList.add('pulled');el('lampHandle').style.transform='translateY(40px)'}
-function turnOff(){lampOn=false;el('lampOverlay').classList.remove('lamp-on');playSnd(400,.06,'square',.06,0);el('lampStatus').textContent='下拉金色灯绳，点亮灯光';el('lampHandle').classList.remove('pulled');el('lampHandle').style.transform='translateY(0)'}
+function turnOn(){lampOn=true;el('lampOverlay').classList.add('lamp-on');playSnd(800,.08,'square',.08,0);setTimeout(function(){playSnd(1200,.05,'square',.06,.02)},80);setTimeout(function(){playSnd(60,.5,'sine',.04,.15)},150);el('lampStatus').textContent=t('lampOn');el('lampHandle').classList.add('pulled');el('lampHandle').style.transform='translateY(40px)'}
+function turnOff(){lampOn=false;el('lampOverlay').classList.remove('lamp-on');playSnd(400,.06,'square',.06,0);el('lampStatus').textContent=t('lampHint');el('lampHandle').classList.remove('pulled');el('lampHandle').style.transform='translateY(0)'}
 function enterFromLamp(){
   var nick=el('lampNick').value.trim()||'访客';var av=selectedAvatar;if(customAvatar)av=customAvatar;
   var v={nick:nick,avatar:av,time:new Date().toISOString()};
