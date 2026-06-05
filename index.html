@@ -366,8 +366,9 @@ const cls=['#06b6d4','#d946ef','#10b981','#3b82f6','#f59e0b','#ef4444','#8b5cf6'
 async function init(){
   visitor=JSON.parse(localStorage.getItem(VK)||'null');
   try{const s=localStorage.getItem(SK);if(s)siteData=JSON.parse(s);else{const r=await fetch('data.json');if(r.ok){siteData=await r.json();saveData()}}}catch(e){siteData=getDefaultData()}
-  // Auto-load playlist from playlist.json if empty
-  if(!siteData.playlist||!siteData.playlist.length){try{const r=await fetch('playlist.json');if(r.ok){siteData.playlist=await r.json();saveData()}}catch(e){}}
+  // Auto-load playlist from playlist.json if empty or missing CDN URLs
+  var needReload=!siteData.playlist||!siteData.playlist.length||!siteData.playlist[0].url;
+  if(needReload){try{var r=await fetch('playlist.json');if(r.ok){siteData.playlist=await r.json();saveData()}}catch(e){}}
   applySiteData();updateUptime();renderAll();updateI18n();if(!inited){inited=true;setInterval(updateUptime,1000);initMusic();try{drawWheel()}catch(e){}}
 }
 function getDefaultData(){return {site:{name:'笺事语阑',signature:'准备得太久，你就没有办法开始',startDate:'2026-06-03',avatar:'',theme:'dark'},social:{},sponsor:{enabled:true,text:'如果我的分享对你有帮助，欢迎请我喝杯咖啡 ☕',textEn:'Buy me a coffee ☕'},articles:[],skills:[],deltaForce:{date:'',passwords:[{map:'零号大坝',code:'----',bgImage:''},{map:'长弓溪谷',code:'----',bgImage:''},{map:'巴克什',code:'----',bgImage:''},{map:'航天基地',code:'----',bgImage:''},{map:'潮汐监狱',code:'----',bgImage:''}],exchangeItems:[]},links:{aiResources:[],communities:[],hobbies:[],apps:[]},playlist:[],featured:{title:'欢迎来到笺事语阑',desc:'分享AI学习笔记、自制Skills、游戏攻略。',date:'2026-06-03',tag:'站点'},announcement:{preview:'博客已就绪',detail:'欢迎来到笺事语阑！'}}}
