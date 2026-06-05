@@ -4,3 +4,4 @@ Thumbs.db
 __pycache__/
 node_modules/
 .github-token
+music/*.mp3
