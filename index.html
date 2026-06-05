@@ -14,22 +14,25 @@ body{font-family:var(--font);background:var(--bg);color:var(--txt);min-height:10
 .bg-dots{position:absolute;inset:0;z-index:2;background-image:radial-gradient(circle,rgba(255,255,255,.025)1px,transparent 1px);background-size:24px 24px}
 
 /* Welcome */
-.welcome-overlay{position:fixed;inset:0;z-index:100;background:var(--bg);display:flex;align-items:center;justify-content:center;transition:opacity .5s,visibility .5s}
+.welcome-overlay{position:fixed;inset:0;z-index:100;background:var(--bg);display:flex;align-items:center;justify-content:center;transition:opacity .5s,visibility .5s;cursor:none}
 .welcome-overlay.hidden{opacity:0;visibility:hidden;pointer-events:none}
 .welcome-bg{position:absolute;inset:0;overflow:hidden;pointer-events:none}
 .wb1,.wb2{position:absolute;border-radius:50%;filter:blur(120px);opacity:.07}
 .wb1{width:500px;height:500px;left:-8%;top:-20%;background:var(--c1)}.wb2{width:380px;height:380px;right:-5%;bottom:-15%;background:var(--c2);animation:drift 12s ease-in-out infinite}
 @keyframes drift{0%,100%{transform:translate(0,0)}50%{transform:translate(-35px,30px)}}
-.welcome-content{position:relative;z-index:1;text-align:center;padding:20px}
-.welcome-greeting{font-size:.8rem;color:var(--tx3);letter-spacing:8px;margin-bottom:16px;text-transform:uppercase;font-weight:500}
-.welcome-title{font-size:clamp(3rem,7vw,5.5rem);font-weight:900;letter-spacing:4px;margin-bottom:12px;line-height:1.05}
-.welcome-sub{font-size:clamp(.85rem,2vw,1.1rem);color:var(--tx2);font-weight:300;letter-spacing:3px;margin-bottom:60px}
-.welcome-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+.welcome-content{position:relative;z-index:1;text-align:center;padding:20px;transition:transform .3s ease-out}
+.welcome-title{font-size:clamp(3rem,7vw,5.5rem);font-weight:900;letter-spacing:4px;margin-bottom:12px;line-height:1.05;transition:transform .3s ease-out}
+.welcome-sub{font-size:clamp(.85rem,2vw,1.1rem);color:var(--tx2);font-weight:300;letter-spacing:3px;margin-bottom:60px;transition:transform .35s ease-out}
+.welcome-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;transition:transform .4s ease-out}
 .w-btn{padding:14px 44px;border-radius:50px;font-size:.88rem;font-weight:600;cursor:pointer;border:none;font-family:var(--font);letter-spacing:1px;transition:all var(--t)}
 .w-btn.p{background:linear-gradient(135deg,var(--c1),var(--c3));color:#fff;box-shadow:0 0 20px rgba(6,182,212,.2)}
 .w-btn.p:hover{transform:translateY(-3px);box-shadow:0 0 30px rgba(6,182,212,.4)}
 .w-btn.o{background:rgba(255,255,255,.03);border:1.5px solid rgba(255,255,255,.08);color:var(--tx2);backdrop-filter:blur(20px)}
 .w-btn.o:hover{border-color:var(--c1);color:var(--c1);transform:translateY(-3px)}
+/* Lens cursor */
+.w-cursor{position:fixed;width:140px;height:140px;border-radius:50%;pointer-events:none;z-index:110;transform:translate(-50%,-50%);mix-blend-mode:difference;background:#fff}
+.w-eng-overlay{position:fixed;inset:0;pointer-events:none;z-index:120;clip-path:circle(0px at -100px -100px);display:flex;align-items:center;justify-content:center}
+.w-eng-inner{background:#fcf8ed;color:#0e0a06;font-size:clamp(3rem,7vw,5.5rem);font-weight:900;letter-spacing:4px;padding:4px 12px;white-space:nowrap}
 
 /* Lamp */
 .lamp-overlay{position:fixed;inset:0;z-index:99;background:radial-gradient(ellipse at 40% 40%,#1a1a2e 0%,#0a0a12 70%,#000 100%);display:flex;align-items:center;justify-content:center;gap:40px;transition:opacity .6s,visibility .6s;padding:20px;flex-wrap:wrap}
@@ -263,11 +266,12 @@ body{font-family:var(--font);background:var(--bg);color:var(--txt);min-height:10
 <!-- Welcome -->
 <div class="welcome-overlay" id="welcomeOverlay">
 <div class="welcome-bg"><div class="wb1"></div><div class="wb2"></div></div>
-<div class="welcome-content">
-<div class="welcome-greeting">欢迎光临我的博客</div>
+<div class="w-cursor" id="wCursor"></div>
+<div class="w-eng-overlay" id="wEngOverlay"><div class="w-eng-inner" id="wEngText">笺事语阑</div></div>
+<div class="welcome-content" id="welcomeContent">
 <div class="welcome-title" id="welcomeName">笺事语阑</div>
 <div class="welcome-sub" id="welcomeSig">准备得太久，你就没有办法开始</div>
-<div class="welcome-btns">
+<div class="welcome-btns" id="welcomeBtns">
 <button class="w-btn p" id="btnBlog">阅读博客</button>
 <button class="w-btn o" id="btnGame">游戏板块</button>
 </div>
@@ -374,6 +378,8 @@ const cls=['#06b6d4','#d946ef','#10b981','#3b82f6','#f59e0b','#ef4444','#8b5cf6'
 async function init(){
   visitor=JSON.parse(localStorage.getItem(VK)||'null');
   try{const s=localStorage.getItem(SK);if(s)siteData=JSON.parse(s);else{const r=await fetch('data.json');if(r.ok){siteData=await r.json();saveData()}}}catch(e){siteData=getDefaultData()}
+  // Auto-load playlist from playlist.json if empty
+  if(!siteData.playlist||!siteData.playlist.length){try{const r=await fetch('playlist.json');if(r.ok){siteData.playlist=await r.json();saveData()}}catch(e){}}
   applySiteData();updateUptime();renderAll();updateI18n();if(!inited){inited=true;setInterval(updateUptime,1000);initMusic();drawWheel()}
 }
 function getDefaultData(){return {site:{name:'笺事语阑',signature:'准备得太久，你就没有办法开始',startDate:'2026-06-03',avatar:'',theme:'dark'},social:{},sponsor:{enabled:true,text:'如果我的分享对你有帮助，欢迎请我喝杯咖啡 ☕',textEn:'Buy me a coffee ☕'},articles:[],skills:[],deltaForce:{date:'',passwords:[{map:'零号大坝',code:'----',bgImage:''},{map:'长弓溪谷',code:'----',bgImage:''},{map:'巴克什',code:'----',bgImage:''},{map:'航天基地',code:'----',bgImage:''},{map:'潮汐监狱',code:'----',bgImage:''}],exchangeItems:[]},links:{aiResources:[],communities:[],hobbies:[],apps:[]},playlist:[],featured:{title:'欢迎来到笺事语阑',desc:'分享AI学习笔记、自制Skills、游戏攻略。',date:'2026-06-03',tag:'站点'},announcement:{preview:'博客已就绪',detail:'欢迎来到笺事语阑！'}}}
@@ -414,6 +420,11 @@ function showSection(section){
   else if(section==='links'){el('sec-linkswrap').classList.remove('hidden');renderLinks()}
   else{el('bentoWrap').classList.remove('hidden')}
 }
+// Welcome cursor + English overlay
+var wc=el('wCursor'),weo=el('wEngOverlay'),wet=el('wEngText'),wct=el('welcomeContent'),wsig=el('welcomeSig'),wbtns=el('welcomeBtns'),wtitle=el('welcomeName');
+function wParallax(mx,my){if(!wct||el('welcomeOverlay').classList.contains('hidden'))return;var ww=window.innerWidth/2,wh=window.innerHeight/2,dx=(mx-ww)/ww,dy=(my-wh)/wh;wtitle.style.transform='translate('+(dx*25)+'px,'+(dy*15)+'px)';wsig.style.transform='translate('+(dx*15)+'px,'+(dy*10)+'px)';wbtns.style.transform='translate('+(dx*10)+'px,'+(dy*6)+'px)'}
+function wUpdateEng(mx,my){if(!wtitle||el('welcomeOverlay').classList.contains('hidden'))return;var r=wtitle.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;var d=Math.sqrt((mx-cx)*(mx-cx)+(my-cy)*(my-cy));if(d<150){weo.style.clipPath='circle(70px at '+mx+'px '+my+'px)';wet.textContent='你好，我是 笺事语阑';wet.style.position='fixed';wet.style.left=cx+'px';wet.style.top=cy+'px';wet.style.transform='translate(-50%,-50%)';wet.style.fontSize=window.getComputedStyle(wtitle).fontSize}else{weo.style.clipPath='circle(0px at -100px -100px)'}}
+document.addEventListener('mousemove',function(e){if(wc){wc.style.left=e.clientX+'px';wc.style.top=e.clientY+'px'}wUpdateEng(e.clientX,e.clientY);wParallax(e.clientX,e.clientY)});
 el('btnBlog').addEventListener('click',function(){
   el('welcomeOverlay').classList.add('hidden');
   if(loginDone){el('mainLayout').classList.remove('hidden');document.body.style.overflow='';init().then(function(){showSection('blog')})}
