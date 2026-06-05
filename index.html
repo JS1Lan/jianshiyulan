@@ -230,7 +230,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--txt);min-height:10
 .rf-form input:focus{border-color:var(--c1)}
 .btn{padding:8px 18px;border-radius:18px;font-size:.74rem;font-weight:600;cursor:pointer;border:none;font-family:var(--font);transition:all var(--t)}
 .btn-p{background:var(--c1);color:#000}.btn-p:hover{opacity:.85}
-.qr-ph{width:140px;height:140px;border-radius:16px;background:rgba(255,255,255,.03);display:flex;align-items:center;justify-content:center;margin:8px auto;color:var(--tx3);font-size:.7rem;border:2px dashed var(--dv)}
+.qr-ph{max-width:240px;border-radius:16px;display:flex;align-items:center;justify-content:center;margin:8px auto;border:2px dashed var(--dv)}
+.qr-ph img{width:100%;border-radius:16px}
 .qr-grid{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;text-align:center}
 .article-content{font-size:.84rem;line-height:1.9;color:var(--tx2)}
 .article-content h1,.article-content h2,.article-content h3{color:var(--txt)}
@@ -346,12 +347,12 @@ body{font-family:var(--font);background:var(--bg);color:var(--txt);min-height:10
 </div>
 
 <!-- Modals -->
-<div class="modal-overlay" id="qrModal"><div class="modal" style="max-width:380px"><div class="modal-header"><div class="modal-title" id="qrModalTitle">扫码添加</div><button class="modal-close" onclick="closeQRModal()">✕</button></div><div class="modal-body" style="text-align:center"><img id="qrModalImg" src="" style="width:200px;height:200px;border-radius:12px;background:rgba(255,255,255,.03)"><p style="font-size:.68rem;color:var(--tx3);margin-top:10px">打开对应App扫一扫</p></div></div></div>
+<div class="modal-overlay" id="qrModal"><div class="modal" style="max-width:380px"><div class="modal-header"><div class="modal-title" id="qrModalTitle">扫码添加</div><button class="modal-close" onclick="closeQRModal()">✕</button></div><div class="modal-body" style="text-align:center"><img id="qrModalImg" src="" style="max-width:260px;max-height:400px;border-radius:12px;display:block;margin:0 auto"><p style="font-size:.68rem;color:var(--tx3);margin-top:10px">打开对应App扫一扫</p></div></div></div>
 <div class="modal-overlay" id="emailModal"><div class="modal" style="max-width:420px"><div class="modal-header"><div class="modal-title">📧 邮箱</div><button class="modal-close" onclick="closeEmailModal()">✕</button></div><div class="modal-body" style="text-align:center;padding:30px"><div style="font-size:1.1rem;font-weight:700;color:var(--c1);margin-bottom:10px" id="emailAddr">948840541@qq.com</div><button class="btn btn-p btn-sm" onclick="navigator.clipboard.writeText('948840541@qq.com');this.textContent='已复制'" style="margin-bottom:8px">📋 复制邮箱</button><p style="font-size:.7rem;color:var(--tx3)">直接发送邮件至该地址</p></div></div></div>
 <div class="modal-overlay" id="textModal"><div class="modal" style="max-width:400px"><div class="modal-header"><div class="modal-title" id="textModalTitle"></div><button class="modal-close" onclick="closeTextModal()">✕</button></div><div class="modal-body" style="text-align:center;padding:30px"><div style="font-size:1.2rem;font-weight:700;color:var(--c1)" id="textModalText"></div></div></div></div>
 
 <div class="modal-overlay" id="commentModal"><div class="modal"><div class="modal-header"><div class="modal-title">评论</div><button class="modal-close" id="cmClose">✕</button></div><div class="modal-body" id="commentList"></div><div class="modal-footer"><div class="rf-form"><input type="text" id="commentAuthorInput" placeholder="你的昵称" maxlength="20"><input type="text" id="commentTextInput" placeholder="写下你的想法..." style="flex:2"><button class="btn btn-p btn-sm" id="btnPostCm">发送</button></div></div></div></div>
-<div class="modal-overlay" id="sponsorModal"><div class="modal" style="max-width:400px"><div class="modal-header"><div class="modal-title">支持作者</div><button class="modal-close" id="spClose">✕</button></div><div class="modal-body" style="text-align:center"><p style="margin-bottom:14px;color:var(--tx2);font-size:.8rem" id="sponsorMsg"></p><div class="qr-grid"><div><div class="qr-ph">敬请期待</div><div style="font-size:.62rem;color:var(--tx3);margin-top:4px">微信赞赏</div></div><div><div class="qr-ph">敬请期待</div><div style="font-size:.62rem;color:var(--tx3);margin-top:4px">支付宝</div></div></div></div></div></div>
+<div class="modal-overlay" id="sponsorModal"><div class="modal" style="max-width:400px"><div class="modal-header"><div class="modal-title">支持作者</div><button class="modal-close" id="spClose">✕</button></div><div class="modal-body" style="text-align:center"><p style="margin-bottom:14px;color:var(--tx2);font-size:.8rem" id="sponsorMsg"></p><div class="qr-grid"><div><div class="qr-ph"><img src="photos/ws.png" alt="微信赞赏"></div><div style="font-size:.62rem;color:var(--tx3);margin-top:4px">微信赞赏</div></div><div><div class="qr-ph"><img src="photos/zs.jpg" alt="支付宝"></div><div style="font-size:.62rem;color:var(--tx3);margin-top:4px">支付宝</div></div></div></div></div></div>
 <div class="modal-overlay" id="articleDetailModal"><div class="modal" style="max-width:720px;max-height:86vh"><div class="modal-header"><button class="modal-close" id="adBack">← 返回</button><div class="modal-title" id="articleDetailTitle">文章详情</div><button class="modal-close" id="adClose">✕</button></div><div class="modal-body" id="articleDetailBody"></div><div class="modal-footer"><button class="btn btn-p btn-sm" id="adCommentBtn">💬 评论</button></div></div></div>
 
 <script>
@@ -579,7 +580,7 @@ el('articleDetailModal').addEventListener('click',function(e){if(e.target===this
 // ═══════ SPONSOR ═══════
 function openSponsor(){var s=siteData.sponsor;if(s&&s.text)el('sponsorMsg').textContent=s.text;el('sponsorModal').classList.add('open')}
 function closeSponsor(){el('sponsorModal').classList.remove('open')}
-function showQRModal(type){var t=type==='wx'?'微信扫码加好友':'QQ扫码加好友';var img=type==='wx'?'WX.png':'QQ.png';el('qrModalTitle').textContent=t;el('qrModalImg').src=img+'?v=1';el('qrModal').classList.add('open')}
+function showQRModal(type){var t=type==='wx'?'微信扫码加好友':'QQ扫码加好友';var img=type==='wx'?'photos/wx.png':'QQ.png';el('qrModalTitle').textContent=t;el('qrModalImg').src=img+'?v=1';el('qrModal').classList.add('open')}
 function closeQRModal(){el('qrModal').classList.remove('open')}
 function showEmailModal(){el('emailModal').classList.add('open')}
 function closeEmailModal(){el('emailModal').classList.remove('open')}
