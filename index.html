@@ -375,8 +375,8 @@ function applySiteData(){
   var av=el('sidebarAvatar');if(s.avatar)av.innerHTML='<img src="'+s.avatar+'" alt="avatar">';
   // Show visitor welcome if logged in
   try{var v=JSON.parse(localStorage.getItem(VK));if(v&&v.nick){el('welcomeVisitor').style.display='block';el('welcomeVisitorName').textContent=v.nick}}catch(e){}
-  var icons=[{k:'wechat',bg:'#07C160',label:'微信'},{k:'qq',bg:'#12B7F5',label:'QQ'},{k:'email',bg:'#f97316',label:'邮箱'},{k:'bilibili',bg:'#FB7299',label:'B站'},{k:'douyin',bg:'#fff',label:'抖音'},{k:'github',bg:'#fafafa',label:'GitHub'}];
-  el('sidebarSocial').innerHTML=icons.map(function(i){var s='<svg viewBox="0 0 24 24" width="14" height="14"><circle cx="12" cy="12" r="10" fill="'+i.bg+'"/></svg>';return'<span class="s-dot" style="background:'+i.bg+';cursor:pointer" title="'+i.label+'" id="soc-'+i.k+'">'+s+'</span>'}).join('');
+  var icons=[{k:'wechat',bg:'#07C160',label:'微信',ico:'ico-wechat'},{k:'qq',bg:'#12B7F5',label:'QQ',ico:'ico-qq'},{k:'email',bg:'#f97316',label:'邮箱',ico:'ico-mail'},{k:'bilibili',bg:'#FB7299',label:'B站',ico:'ico-bilibili'},{k:'douyin',bg:'#111',label:'抖音',ico:'ico-douyin'},{k:'github',bg:'#fafafa',label:'GitHub',ico:'ico-github'}];
+  el('sidebarSocial').innerHTML=icons.map(function(i){var s='<svg viewBox="0 0 24 24" width="16" height="16"><use href="#'+i.ico+'"/></svg>';return'<span class="s-dot" style="background:'+i.bg+';cursor:pointer" title="'+i.label+'" id="soc-'+i.k+'">'+s+'</span>'}).join('');
   el('soc-wechat')&&el('soc-wechat').addEventListener('click',function(){showQRModal('wx')});
   el('soc-qq')&&el('soc-qq').addEventListener('click',function(){showQRModal('qq')});
   el('soc-email')&&el('soc-email').addEventListener('click',function(){showEmailModal()});
