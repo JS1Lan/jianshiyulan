@@ -1,98 +1,114 @@
-﻿[
-    {
-        "artist":  "",
-        "title":  "G.E.M.邓紫棋 - 多远都要在一起",
-        "file":  "G.E.M.邓紫棋 - 多远都要在一起.mp3",
-        "cover":  ""
-    },
-    {
-        "artist":  "",
-        "title":  "Gael Garcia Bernal - Remember Me (Lullaby) (From CocoSoundtrack Version)",
-        "file":  "Gael Garcia Bernal - Remember Me (Lullaby) (From CocoSoundtrack Version).mp3",
-        "cover":  ""
-    },
-    {
-        "artist":  "",
-        "title":  "Kirsty刘瑾睿 - 若把你",
-        "file":  "Kirsty刘瑾睿 - 若把你.mp3",
-        "cover":  ""
-    },
-    {
-        "artist":  "",
-        "title":  "陈粒 - 小半",
-        "file":  "陈粒 - 小半.mp3",
-        "cover":  ""
-    },
-    {
-        "artist":  "",
-        "title":  "陈粒 - 走马",
-        "file":  "陈粒 - 走马.mp3",
-        "cover":  ""
-    },
-    {
-        "artist":  "",
-        "title":  "陈绮贞 - 太聪明",
-        "file":  "陈绮贞 - 太聪明.mp3",
-        "cover":  ""
-    },
-    {
-        "artist":  "",
-        "title":  "陈奕迅 - 人来人往",
-        "file":  "陈奕迅 - 人来人往.mp3",
-        "cover":  ""
-    },
-    {
-        "artist":  "",
-        "title":  "陈奕迅 - 粤语残片",
-        "file":  "陈奕迅 - 粤语残片.mp3",
-        "cover":  ""
-    },
-    {
-        "artist":  "",
-        "title":  "陈奕迅 - 最后派对",
-        "file":  "陈奕迅 - 最后派对.mp3",
-        "cover":  ""
-    },
-    {
-        "artist":  "",
-        "title":  "范玮琪 - 是非题",
-        "file":  "范玮琪 - 是非题.mp3",
-        "cover":  ""
-    },
-    {
-        "artist":  "",
-        "title":  "很美味 - April Encounter",
-        "file":  "很美味 - April Encounter.mp3",
-        "cover":  ""
-    },
-    {
-        "artist":  "",
-        "title":  "梁静茹 - 接受",
-        "file":  "梁静茹 - 接受.mp3",
-        "cover":  ""
-    },
-    {
-        "artist":  "",
-        "title":  "木小雅 - 可能否",
-        "file":  "木小雅 - 可能否.mp3",
-        "cover":  ""
-    },
-    {
-        "artist":  "",
-        "title":  "邵帅 - 写给黄淮",
-        "file":  "邵帅 - 写给黄淮.mp3",
-        "cover":  ""
-    },
-    {
-        "artist":  "",
-        "title":  "万能青年旅店 - 杀死那个石家庄人",
-        "file":  "万能青年旅店 - 杀死那个石家庄人.mp3",
-        "cover":  ""
-    },
-    {
-        "artist":  "",
-        "title":  "姚晓棠,白小白 - 从前说 (Live版)",
-        "file":  "姚晓棠,白小白 - 从前说 (Live版).mp3",
-        "cover":  ""
-    }
+[
+  {
+    "artist": "",
+    "title": "G.E.M.邓紫棋 - 多远都要在一起",
+    "file": "G.E.M.邓紫棋 - 多远都要在一起.mp3",
+    "cover": "",
+    "url": "http://jsylai.bkt.clouddn.com/G.E.M.%E9%82%93%E7%B4%AB%E6%A3%8B%20-%20%E5%A4%9A%E8%BF%9C%E9%83%BD%E8%A6%81%E5%9C%A8%E4%B8%80%E8%B5%B7.mp3"
+  },
+  {
+    "artist": "",
+    "title": "Gael Garcia Bernal - Remember Me (Lullaby) (From CocoSoundtrack Version)",
+    "file": "Gael Garcia Bernal - Remember Me (Lullaby) (From CocoSoundtrack Version).mp3",
+    "cover": "",
+    "url": "http://jsylai.bkt.clouddn.com/Gael%20Garcia%20Bernal%20-%20Remember%20Me%20%28Lullaby%29%20%28From%20CocoSoundtrack%20Version%29.mp3"
+  },
+  {
+    "artist": "",
+    "title": "Kirsty刘瑾睿 - 若把你",
+    "file": "Kirsty刘瑾睿 - 若把你.mp3",
+    "cover": "",
+    "url": "http://jsylai.bkt.clouddn.com/Kirsty%E5%88%98%E7%91%BE%E7%9D%BF%20-%20%E8%8B%A5%E6%8A%8A%E4%BD%A0.mp3"
+  },
+  {
+    "artist": "",
+    "title": "陈粒 - 小半",
+    "file": "陈粒 - 小半.mp3",
+    "cover": "",
+    "url": "http://jsylai.bkt.clouddn.com/%E9%99%88%E7%B2%92%20-%20%E5%B0%8F%E5%8D%8A.mp3"
+  },
+  {
+    "artist": "",
+    "title": "陈粒 - 走马",
+    "file": "陈粒 - 走马.mp3",
+    "cover": "",
+    "url": "http://jsylai.bkt.clouddn.com/%E9%99%88%E7%B2%92%20-%20%E8%B5%B0%E9%A9%AC.mp3"
+  },
+  {
+    "artist": "",
+    "title": "陈绮贞 - 太聪明",
+    "file": "陈绮贞 - 太聪明.mp3",
+    "cover": "",
+    "url": "http://jsylai.bkt.clouddn.com/%E9%99%88%E7%BB%AE%E8%B4%9E%20-%20%E5%A4%AA%E8%81%AA%E6%98%8E.mp3"
+  },
+  {
+    "artist": "",
+    "title": "陈奕迅 - 人来人往",
+    "file": "陈奕迅 - 人来人往.mp3",
+    "cover": "",
+    "url": "http://jsylai.bkt.clouddn.com/%E9%99%88%E5%A5%95%E8%BF%85%20-%20%E4%BA%BA%E6%9D%A5%E4%BA%BA%E5%BE%80.mp3"
+  },
+  {
+    "artist": "",
+    "title": "陈奕迅 - 粤语残片",
+    "file": "陈奕迅 - 粤语残片.mp3",
+    "cover": "",
+    "url": "http://jsylai.bkt.clouddn.com/%E9%99%88%E5%A5%95%E8%BF%85%20-%20%E7%B2%A4%E8%AF%AD%E6%AE%8B%E7%89%87.mp3"
+  },
+  {
+    "artist": "",
+    "title": "陈奕迅 - 最后派对",
+    "file": "陈奕迅 - 最后派对.mp3",
+    "cover": "",
+    "url": "http://jsylai.bkt.clouddn.com/%E9%99%88%E5%A5%95%E8%BF%85%20-%20%E6%9C%80%E5%90%8E%E6%B4%BE%E5%AF%B9.mp3"
+  },
+  {
+    "artist": "",
+    "title": "范玮琪 - 是非题",
+    "file": "范玮琪 - 是非题.mp3",
+    "cover": "",
+    "url": "http://jsylai.bkt.clouddn.com/%E8%8C%83%E7%8E%AE%E7%90%AA%20-%20%E6%98%AF%E9%9D%9E%E9%A2%98.mp3"
+  },
+  {
+    "artist": "",
+    "title": "很美味 - April Encounter",
+    "file": "很美味 - April Encounter.mp3",
+    "cover": "",
+    "url": "http://jsylai.bkt.clouddn.com/%E5%BE%88%E7%BE%8E%E5%91%B3%20-%20April%20Encounter.mp3"
+  },
+  {
+    "artist": "",
+    "title": "梁静茹 - 接受",
+    "file": "梁静茹 - 接受.mp3",
+    "cover": "",
+    "url": "http://jsylai.bkt.clouddn.com/%E6%A2%81%E9%9D%99%E8%8C%B9%20-%20%E6%8E%A5%E5%8F%97.mp3"
+  },
+  {
+    "artist": "",
+    "title": "木小雅 - 可能否",
+    "file": "木小雅 - 可能否.mp3",
+    "cover": "",
+    "url": "http://jsylai.bkt.clouddn.com/%E6%9C%A8%E5%B0%8F%E9%9B%85%20-%20%E5%8F%AF%E8%83%BD%E5%90%A6.mp3"
+  },
+  {
+    "artist": "",
+    "title": "邵帅 - 写给黄淮",
+    "file": "邵帅 - 写给黄淮.mp3",
+    "cover": "",
+    "url": "http://jsylai.bkt.clouddn.com/%E9%82%B5%E5%B8%85%20-%20%E5%86%99%E7%BB%99%E9%BB%84%E6%B7%AE.mp3"
+  },
+  {
+    "artist": "",
+    "title": "万能青年旅店 - 杀死那个石家庄人",
+    "file": "万能青年旅店 - 杀死那个石家庄人.mp3",
+    "cover": "",
+    "url": "http://jsylai.bkt.clouddn.com/%E4%B8%87%E8%83%BD%E9%9D%92%E5%B9%B4%E6%97%85%E5%BA%97%20-%20%E6%9D%80%E6%AD%BB%E9%82%A3%E4%B8%AA%E7%9F%B3%E5%AE%B6%E5%BA%84%E4%BA%BA.mp3"
+  },
+  {
+    "artist": "",
+    "title": "姚晓棠,白小白 - 从前说 (Live版)",
+    "file": "姚晓棠,白小白 - 从前说 (Live版).mp3",
+    "cover": "",
+    "url": "http://jsylai.bkt.clouddn.com/%E5%A7%9A%E6%99%93%E6%A3%A0%2C%E7%99%BD%E5%B0%8F%E7%99%BD%20-%20%E4%BB%8E%E5%89%8D%E8%AF%B4%20%28Live%E7%89%88%29.mp3"
+  }
 ]
