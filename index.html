@@ -356,7 +356,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--txt);min-height:10
 // ═══════ STATE ═══════
 let siteData=null,currentLang='zh',cct=null,visitor=null,inited=false;
 const SK='blogData',VK='blogVisitor';
-let musicAudio=null,musicIdx=-1,musicLoop=0;
+let musicAudio=null,musicIdx=-1,musicLoop=0,autoPlayTried=false;
 let guns=[],currentAngle=0;
 const cls=['#06b6d4','#d946ef','#10b981','#3b82f6','#f59e0b','#ef4444','#8b5cf6','#ec4899','#14b8a6','#f97316'];
 
@@ -513,7 +513,7 @@ el('announcePreview').addEventListener('click',function(){var ann=siteData.annou
 el('btnTimelineMore').addEventListener('click',function(){var tl=siteData.timeline||[];if(!tl.length){alert('暂无动态');return}alert('📢 近期动态\n\n'+tl.map(function(t){return'📅 '+esc(t.date||'')+' ｜ '+t.text}).join('\n\n'))});
 
 // ═══════ MUSIC ═══════
-function initMusic(){musicAudio=new Audio();musicAudio.volume=.3;musicAudio.ontimeupdate=function(){var p=el('musicProgress');if(p&&musicAudio.duration)p.value=(musicAudio.currentTime/musicAudio.duration)*100};musicAudio.onended=function(){if(musicLoop===2){musicAudio.currentTime=0;musicAudio.play()}else if(musicLoop===1){nextMusic()}else{playMusic()}};musicAudio.onloadeddata=function(){updateMusicUI();renderMusicCover()};renderMusicPlaylist();if(siteData&&siteData.playlist&&siteData.playlist.length>0){musicIdx=Math.floor(Math.random()*siteData.playlist.length);loadMusic(musicIdx);musicAudio.play().catch(function(){})}}
+function initMusic(){musicAudio=new Audio();musicAudio.volume=.3;musicAudio.ontimeupdate=function(){var p=el('musicProgress');if(p&&musicAudio.duration)p.value=(musicAudio.currentTime/musicAudio.duration)*100};musicAudio.onended=function(){if(musicLoop===2){musicAudio.currentTime=0;musicAudio.play()}else if(musicLoop===1){nextMusic()}else{playMusic()}};musicAudio.onloadeddata=function(){updateMusicUI();renderMusicCover()};renderMusicPlaylist();if(siteData&&siteData.playlist&&siteData.playlist.length>0){musicIdx=Math.floor(Math.random()*siteData.playlist.length);loadMusic(musicIdx);setTimeout(function(){if(!autoPlayTried){autoPlayTried=true;musicAudio.play().catch(function(){})}},800)}}
 function loadMusic(i){var pl=siteData&&siteData.playlist||[];if(i<0||i>=pl.length)return;musicIdx=i;musicAudio.src=pl[i].url||('music/'+pl[i].file);musicAudio.load()}
 function playMusic(){if(musicIdx<0&&siteData.playlist&&siteData.playlist.length>0){musicIdx=Math.floor(Math.random()*siteData.playlist.length);loadMusic(musicIdx)}musicAudio.play().catch(function(){})}
 function toggleMusic(){if(musicAudio.paused)playMusic();else{musicAudio.pause()}updateMusicUI()}
