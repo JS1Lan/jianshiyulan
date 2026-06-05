@@ -366,7 +366,7 @@ async function init(){
   try{const s=localStorage.getItem(SK);if(s)siteData=JSON.parse(s);else{const r=await fetch('data.json');if(r.ok){siteData=await r.json();saveData()}}}catch(e){siteData=getDefaultData()}
   // Auto-load playlist from playlist.json if empty
   if(!siteData.playlist||!siteData.playlist.length){try{const r=await fetch('playlist.json');if(r.ok){siteData.playlist=await r.json();saveData()}}catch(e){}}
-  applySiteData();updateUptime();renderAll();updateI18n();if(!inited){inited=true;setInterval(updateUptime,1000);initMusic();drawWheel()}
+  applySiteData();updateUptime();renderAll();updateI18n();if(!inited){inited=true;setInterval(updateUptime,1000);initMusic();try{drawWheel()}catch(e){}}
 }
 function getDefaultData(){return {site:{name:'笺事语阑',signature:'准备得太久，你就没有办法开始',startDate:'2026-06-03',avatar:'',theme:'dark'},social:{},sponsor:{enabled:true,text:'如果我的分享对你有帮助，欢迎请我喝杯咖啡 ☕',textEn:'Buy me a coffee ☕'},articles:[],skills:[],deltaForce:{date:'',passwords:[{map:'零号大坝',code:'----',bgImage:''},{map:'长弓溪谷',code:'----',bgImage:''},{map:'巴克什',code:'----',bgImage:''},{map:'航天基地',code:'----',bgImage:''},{map:'潮汐监狱',code:'----',bgImage:''}],exchangeItems:[]},links:{aiResources:[],communities:[],hobbies:[],apps:[]},playlist:[],featured:{title:'欢迎来到笺事语阑',desc:'分享AI学习笔记、自制Skills、游戏攻略。',date:'2026-06-03',tag:'站点'},announcement:{preview:'博客已就绪',detail:'欢迎来到笺事语阑！'}}}
 function saveData(){try{localStorage.setItem(SK,JSON.stringify(siteData))}catch(e){}}
@@ -514,7 +514,7 @@ el('btnTimelineMore').addEventListener('click',function(){var tl=siteData.timeli
 
 // ═══════ MUSIC ═══════
 function initMusic(){musicAudio=new Audio();musicAudio.volume=.3;musicAudio.ontimeupdate=function(){var p=el('musicProgress');if(p&&musicAudio.duration)p.value=(musicAudio.currentTime/musicAudio.duration)*100};musicAudio.onended=function(){if(musicLoop===2){musicAudio.currentTime=0;musicAudio.play()}else if(musicLoop===1){nextMusic()}else{playMusic()}};musicAudio.onloadeddata=function(){updateMusicUI();renderMusicCover()};renderMusicPlaylist();if(siteData&&siteData.playlist&&siteData.playlist.length>0){musicIdx=Math.floor(Math.random()*siteData.playlist.length);loadMusic(musicIdx);setTimeout(function(){if(!autoPlayTried){autoPlayTried=true;musicAudio.play().catch(function(){})}},800)}}
-function loadMusic(i){var pl=siteData&&siteData.playlist||[];if(i<0||i>=pl.length)return;musicIdx=i;musicAudio.src=pl[i].url||('music/'+pl[i].file);musicAudio.load()}
+function loadMusic(i){var pl=siteData&&siteData.playlist||[];if(i<0||i>=pl.length)return;musicIdx=i;var u=pl[i].url||('music/'+pl[i].file);musicAudio.src=u.replace('http://','https://');musicAudio.load()}
 function playMusic(){if(musicIdx<0&&siteData.playlist&&siteData.playlist.length>0){musicIdx=Math.floor(Math.random()*siteData.playlist.length);loadMusic(musicIdx)}musicAudio.play().catch(function(){})}
 function toggleMusic(){if(musicAudio.paused)playMusic();else{musicAudio.pause()}updateMusicUI()}
 function prevMusic(){var pl=siteData.playlist||[];if(!pl.length)return;musicIdx=musicIdx<=0?pl.length-1:musicIdx-1;loadMusic(musicIdx);playMusic()}
