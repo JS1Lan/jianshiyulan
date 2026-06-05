@@ -169,16 +169,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--txt);min-height:10
 .mc-prog{width:100%;margin-bottom:8px}
 .mc-prog input[type=range]{width:100%;height:3px;-webkit-appearance:none;appearance:none;background:rgba(255,255,255,.06);border-radius:2px;outline:none;cursor:pointer}
 .mc-prog input::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:12px;border-radius:50%;background:var(--c2);cursor:pointer}
-.mc-ctrls{display:flex;align-items:center;justify-content:center;gap:10px}
-.mc-btn{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;background:none;border:none;color:var(--tx2);transition:all var(--t)}
-.mc-btn:hover{color:var(--txt);background:rgba(255,255,255,.04)}
-.mc-btn.play-btn{width:42px;height:42px;background:linear-gradient(135deg,var(--c2),var(--c1));color:#fff;box-shadow:0 0 20px rgba(217,70,239,.12)}
-.mc-btn.play-btn:hover{opacity:.85}
-.mc-vol{display:flex;align-items:center;gap:4px;margin-top:6px}
-.mc-vol input[type=range]{width:60px;height:3px}
-.mc-plist{margin-top:8px;max-height:100px;overflow-y:auto}
-.mc-plitem{font-size:.66rem;padding:4px 8px;border-radius:6px;cursor:pointer;color:var(--tx3);transition:all var(--t);display:flex;justify-content:space-between}
-.mc-plitem:hover,.mc-plitem.active{color:var(--c2);background:rgba(255,255,255,.02)}
+.mc-ctrls{display:flex;align-items:center;justify-content:center;gap:14px}.mc-btn{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);color:var(--tx2);transition:all var(--t);backdrop-filter:blur(10px)}.mc-btn:hover{color:var(--txt);background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.12);transform:scale(1.08)}.mc-btn.play-btn{width:48px;height:48px;background:linear-gradient(135deg,var(--c2),var(--c1));color:#fff;border:none;box-shadow:0 0 24px rgba(217,70,239,.15)}.mc-btn.play-btn:hover{opacity:.9;box-shadow:0 0 32px rgba(217,70,239,.25)}.mc-vol{display:flex;align-items:center;gap:8px;margin-top:8px;padding:0 4px}.mc-vol input[type=range]{width:56px;height:3px}.mc-plist-wrap{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.04);border-radius:12px;padding:10px 12px;margin-top:10px}.mc-plist-title{font-size:.62rem;color:var(--tx3);letter-spacing:1px;margin-bottom:6px;text-transform:uppercase}.mc-plist{max-height:110px;overflow-y:auto}.mc-plitem{font-size:.66rem;padding:5px 8px;border-radius:6px;cursor:pointer;color:var(--tx3);transition:all var(--t);display:flex;justify-content:space-between;margin:2px 0}.mc-plitem:hover,.mc-plitem.active{color:var(--c2);background:rgba(217,70,239,.08)}
 
 .tl-item{display:flex;gap:8px;padding:4px 0;border-bottom:1px solid var(--dv);font-size:.7rem}
 .tl-item:last-child{border-bottom:none}
@@ -326,7 +317,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--txt);min-height:10
 <div class="mc-prog"><input type="range" id="musicProgress" min="0" max="100" value="0"></div>
 <div class="mc-ctrls"><button class="mc-btn" id="btnPrev">⏮</button><button class="mc-btn play-btn" id="btnPlay">▶</button><button class="mc-btn" id="btnNext">⏭</button><button class="mc-btn" id="btnLoop" style="font-size:.7rem">🔁</button></div>
 <div class="mc-vol">🔊<input type="range" id="musicVolume" min="0" max="100" value="70"></div>
-<div class="mc-plist" id="musicPlaylist"></div>
+<div class="mc-plist-wrap"><div class="mc-plist-title">待播放歌曲</div><div class="mc-plist" id="musicPlaylist"></div></div>
 </div>
 
 <div class="bs">
@@ -520,7 +511,7 @@ el('announcePreview').addEventListener('click',function(){var ann=siteData.annou
 el('btnTimelineMore').addEventListener('click',function(){var tl=siteData.timeline||[];if(!tl.length){alert('暂无动态');return}alert('📢 近期动态\n\n'+tl.map(function(t){return'📅 '+esc(t.date||'')+' ｜ '+t.text}).join('\n\n'))});
 
 // ═══════ MUSIC ═══════
-function initMusic(){musicAudio=new Audio();musicAudio.volume=.7;musicAudio.ontimeupdate=function(){var p=el('musicProgress');if(p&&musicAudio.duration)p.value=(musicAudio.currentTime/musicAudio.duration)*100};musicAudio.onended=function(){if(musicLoop===2){musicAudio.currentTime=0;musicAudio.play()}else if(musicLoop===1){nextMusic()}else{stopMusicUI()}};musicAudio.onloadeddata=function(){updateMusicUI();renderMusicCover()};renderMusicPlaylist();if(siteData&&siteData.playlist&&siteData.playlist.length>0){musicIdx=0;loadMusic(0)}}
+function initMusic(){musicAudio=new Audio();musicAudio.volume=.3;musicAudio.ontimeupdate=function(){var p=el('musicProgress');if(p&&musicAudio.duration)p.value=(musicAudio.currentTime/musicAudio.duration)*100};musicAudio.onended=function(){if(musicLoop===2){musicAudio.currentTime=0;musicAudio.play()}else if(musicLoop===1){nextMusic()}else{playMusic()}};musicAudio.onloadeddata=function(){updateMusicUI();renderMusicCover()};renderMusicPlaylist();if(siteData&&siteData.playlist&&siteData.playlist.length>0){musicIdx=Math.floor(Math.random()*siteData.playlist.length);loadMusic(musicIdx);musicAudio.play().catch(function(){})}}
 function loadMusic(i){var pl=siteData&&siteData.playlist||[];if(i<0||i>=pl.length)return;musicIdx=i;musicAudio.src='music/'+pl[i].file;musicAudio.load()}
 function playMusic(){if(!musicAudio.src||musicAudio.src===window.location.href+'music/'){if(siteData&&siteData.playlist&&siteData.playlist.length>0){loadMusic(0)}}musicAudio.play().catch(function(){})}
 function toggleMusic(){if(musicAudio.paused)playMusic();else{musicAudio.pause()}updateMusicUI()}
