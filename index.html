@@ -157,8 +157,10 @@ body{font-family:var(--font);background:var(--bg);color:var(--txt);min-height:10
 .sp-empty{padding:80px 40px;text-align:center}
 
 .music-card{display:flex;flex-direction:column;padding:20px}
-.mc-cover{width:100%;aspect-ratio:1;border-radius:var(--rs);margin-bottom:12px;overflow:hidden;background:linear-gradient(135deg,rgba(6,182,212,.08),rgba(217,70,239,.06));display:flex;align-items:center;justify-content:center;position:relative}
-.mc-cover img{width:100%;height:100%;object-fit:cover}
+.mc-lyrics{width:100%;aspect-ratio:1;border-radius:var(--rs);margin-bottom:12px;overflow:hidden;background:linear-gradient(135deg,rgba(6,182,212,.06),rgba(217,70,239,.04));display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;text-align:center;padding:16px}
+.mc-lyrics .lyric-line{font-size:.72rem;color:var(--tx3);padding:3px 0;transition:all .4s;line-height:1.6}
+.mc-lyrics .lyric-line.current{color:var(--c1);font-size:.9rem;font-weight:600}
+.mc-lyrics .lyric-prev,.mc-lyrics .lyric-next{opacity:.35}
 .mc-placeholder{display:flex;flex-direction:column;align-items:center;color:var(--tx3);font-size:.68rem}
 .eq-bars{display:flex;gap:3px;align-items:flex-end;height:28px;position:absolute;bottom:14px}
 .eq-bar{width:3px;border-radius:2px;background:var(--c2);animation:eq .8s ease-in-out infinite alternate}
@@ -314,7 +316,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--txt);min-height:10
 </div>
 
 <div class="glass-card bm music-card c2">
-<div class="mc-cover" id="musicCoverWrap"><div class="mc-placeholder" id="musicPlaceholder">🎵 暂无音乐</div><div class="eq-bars" id="eqBars"><span class="eq-bar"></span><span class="eq-bar"></span><span class="eq-bar"></span><span class="eq-bar"></span><span class="eq-bar"></span><span class="eq-bar"></span></div></div>
+<div class="mc-lyrics" id="lyricsBox"><div class="mc-placeholder" id="musicPlaceholder">🎵 暂无音乐</div></div>
 <div class="mc-info"><div class="mc-title" id="musicTitle">未在播放</div><div class="mc-artist" id="musicArtist">添加音乐到 music/ 目录</div></div>
 <div class="mc-prog"><input type="range" id="musicProgress" min="0" max="100" value="0"></div>
 <div class="mc-ctrls"><button class="mc-btn" id="btnPrev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="19 20 9 12 19 4 19 20"/><line x1="5" y1="19" x2="5" y2="5"/></svg></button><button class="mc-btn play-btn" id="btnPlay"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="6 3 20 12 6 21 6 3"/></svg></button><button class="mc-btn" id="btnNext"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19"/></svg></button><button class="mc-btn" id="btnLoop" title="循环模式"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg></button></div>
@@ -356,7 +358,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--txt);min-height:10
 // ═══════ STATE ═══════
 let siteData=null,currentLang='zh',cct=null,visitor=null,inited=false;
 const SK='blogData',VK='blogVisitor';
-let musicAudio=null,musicIdx=-1,musicLoop=0,autoPlayTried=false;
+let musicAudio=null,musicIdx=-1,musicLoop=0,autoPlayTried=false,lyricsData=[];
 let guns=[],currentAngle=0;
 const cls=['#06b6d4','#d946ef','#10b981','#3b82f6','#f59e0b','#ef4444','#8b5cf6','#ec4899','#14b8a6','#f97316'];
 
@@ -513,7 +515,7 @@ el('announcePreview').addEventListener('click',function(){var ann=siteData.annou
 el('btnTimelineMore').addEventListener('click',function(){var tl=siteData.timeline||[];if(!tl.length){alert('暂无动态');return}alert('📢 近期动态\n\n'+tl.map(function(t){return'📅 '+esc(t.date||'')+' ｜ '+t.text}).join('\n\n'))});
 
 // ═══════ MUSIC ═══════
-function initMusic(){musicAudio=new Audio();musicAudio.volume=.3;musicAudio.ontimeupdate=function(){var p=el('musicProgress');if(p&&musicAudio.duration)p.value=(musicAudio.currentTime/musicAudio.duration)*100};musicAudio.onended=function(){if(musicLoop===2){musicAudio.currentTime=0;musicAudio.play()}else if(musicLoop===1){nextMusic()}else{playMusic()}};musicAudio.onloadeddata=function(){updateMusicUI();renderMusicCover()};renderMusicPlaylist();if(siteData&&siteData.playlist&&siteData.playlist.length>0){musicIdx=Math.floor(Math.random()*siteData.playlist.length);loadMusic(musicIdx);setTimeout(function(){if(!autoPlayTried){autoPlayTried=true;musicAudio.play().catch(function(){})}},800)}}
+function initMusic(){musicAudio=new Audio();musicAudio.volume=.3;musicAudio.ontimeupdate=function(){var p=el('musicProgress');if(p&&musicAudio.duration)p.value=(musicAudio.currentTime/musicAudio.duration)*100;renderLyrics()};musicAudio.onended=function(){if(musicLoop===2){musicAudio.currentTime=0;musicAudio.play()}else if(musicLoop===1){nextMusic()}else{playMusic()}};musicAudio.onloadeddata=function(){updateMusicUI();loadLyrics(musicIdx)};renderMusicPlaylist();if(siteData&&siteData.playlist&&siteData.playlist.length>0){musicIdx=Math.floor(Math.random()*siteData.playlist.length);loadMusic(musicIdx);setTimeout(function(){if(!autoPlayTried){autoPlayTried=true;musicAudio.play().catch(function(){})}},800)}}
 function loadMusic(i){var pl=siteData&&siteData.playlist||[];if(i<0||i>=pl.length)return;musicIdx=i;musicAudio.src=pl[i].url||('music/'+pl[i].file);musicAudio.load()}
 function playMusic(){if(musicIdx<0&&siteData.playlist&&siteData.playlist.length>0){musicIdx=Math.floor(Math.random()*siteData.playlist.length);loadMusic(musicIdx)}musicAudio.play().catch(function(){})}
 function toggleMusic(){if(musicAudio.paused)playMusic();else{musicAudio.pause()}updateMusicUI()}
@@ -524,7 +526,9 @@ function seekMusic(v){if(musicAudio.duration)musicAudio.currentTime=(v/100)*musi
 function setVolume(v){musicAudio.volume=v/100}
 function updateMusicUI(){var pl=siteData.playlist||[],playing=!musicAudio.paused;el('btnPlay').innerHTML=playing?'<svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>':'<svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="6 3 20 12 6 21 6 3"/></svg>';el('eqBars').className='eq-bars'+(playing?'':' paused');if(musicIdx>=0&&musicIdx<pl.length){el('musicTitle').textContent=pl[musicIdx].title||pl[musicIdx].file;el('musicArtist').textContent=pl[musicIdx].artist||''}}
 function stopMusicUI(){el('btnPlay').innerHTML='<svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="6 3 20 12 6 21 6 3"/></svg>';el('eqBars').className='eq-bars paused'}
-function renderMusicCover(){var pl=siteData.playlist||[],wrap=el('musicCoverWrap'),ph=el('musicPlaceholder');if(musicIdx>=0&&musicIdx<pl.length&&pl[musicIdx].cover){if(ph)ph.style.display='none';wrap.querySelectorAll('img').forEach(function(e){e.remove()});var img=document.createElement('img');img.src=pl[musicIdx].cover;wrap.insertBefore(img,wrap.firstChild)}else{if(ph)ph.style.display='';wrap.querySelectorAll('img').forEach(function(e){e.remove()})}}
+function loadLyrics(i){var pl=siteData.playlist||[];if(i<0||i>=pl.length)return;lyricsData=[];var url=pl[i].lrc;if(!url)return;fetch(url).then(function(r){return r.text()}).then(function(t){var lines=t.split('\n');for(var j=0;j<lines.length;j++){var m=lines[j].match(/\[(\d{2}):(\d{2})(?:\.(\d{2,3}))?\](.*)/);if(m){var min=parseInt(m[1]),sec=parseInt(m[2]),ms=parseInt(m[3]||'0');if(ms<100)ms*=10;lyricsData.push({time:min*60+sec+ms/1000,text:m[4].trim()})}}lyricsData.sort(function(a,b){return a.time-b.time});el('musicPlaceholder')&&(el('musicPlaceholder').style.display='none')}).catch(function(){})}
+function renderLyrics(){var box=el('lyricsBox');if(!box)return;if(!lyricsData.length){if(musicIdx<0||!(siteData.playlist&&siteData.playlist.length)){box.innerHTML='<div class="mc-placeholder">🎵 暂无音乐</div>'}else{box.innerHTML='<div class="mc-placeholder">🎵 暂无歌词</div>'}return}var ct=musicAudio.currentTime||0,cur=-1;for(var i=0;i<lyricsData.length;i++){if(lyricsData[i].time<=ct)cur=i}var html='';for(var i=Math.max(0,cur-2);i<=Math.min(lyricsData.length-1,cur+3);i++){var cls='lyric-line';if(i===cur)cls+=' current';else if(i<cur)cls+=' lyric-prev';else cls+=' lyric-next';html+='<div class="'+cls+'">'+(lyricsData[i].text||'♪')+'</div>'}box.innerHTML=html||'<div class="mc-placeholder">🎵 暂无歌词</div>';if(cur>=0){var curEl=box.querySelector('.current');if(curEl)curEl.scrollIntoView({block:'center',behavior:'smooth'})}}
+function renderMusicCover(){}
 function renderMusicPlaylist(){var pl=siteData.playlist||[],list=el('musicPlaylist');if(!pl.length){list.innerHTML=''}else{list.innerHTML=pl.map(function(s,i){return'<div class="mc-plitem'+(i===musicIdx?' active':'')+'" data-midx="'+i+'">'+esc(s.title||s.file)+'<span style="font-size:.58rem;color:var(--tx3)">'+(s.artist||'')+'</span></div>'}).join('');list.querySelectorAll('.mc-plitem').forEach(function(item){item.addEventListener('click',function(){var i=parseInt(this.dataset.midx);musicIdx=i;loadMusic(i);playMusic()})})}}
 el('btnPlay').addEventListener('click',toggleMusic);el('btnPrev').addEventListener('click',prevMusic);el('btnNext').addEventListener('click',nextMusic);el('btnLoop').addEventListener('click',toggleLoop);
 el('musicProgress').addEventListener('input',function(){seekMusic(this.value)});
