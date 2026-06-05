@@ -345,6 +345,10 @@ body{font-family:var(--font);background:var(--bg);color:var(--txt);min-height:10
 </div>
 
 <!-- Modals -->
+<div class="modal-overlay" id="qrModal"><div class="modal" style="max-width:380px"><div class="modal-header"><div class="modal-title" id="qrModalTitle">扫码添加</div><button class="modal-close" onclick="closeQRModal()">✕</button></div><div class="modal-body" style="text-align:center"><img id="qrModalImg" src="" style="width:200px;height:200px;border-radius:12px;background:rgba(255,255,255,.03)"><p style="font-size:.68rem;color:var(--tx3);margin-top:10px">打开对应App扫一扫</p></div></div></div>
+<div class="modal-overlay" id="emailModal"><div class="modal" style="max-width:420px"><div class="modal-header"><div class="modal-title">📧 邮箱</div><button class="modal-close" onclick="closeEmailModal()">✕</button></div><div class="modal-body" style="text-align:center;padding:30px"><div style="font-size:1.1rem;font-weight:700;color:var(--c1);margin-bottom:10px" id="emailAddr">948840541@qq.com</div><button class="btn btn-p btn-sm" onclick="navigator.clipboard.writeText('948840541@qq.com');this.textContent='已复制'" style="margin-bottom:8px">📋 复制邮箱</button><p style="font-size:.7rem;color:var(--tx3)">直接发送邮件至该地址</p></div></div></div>
+<div class="modal-overlay" id="textModal"><div class="modal" style="max-width:400px"><div class="modal-header"><div class="modal-title" id="textModalTitle"></div><button class="modal-close" onclick="closeTextModal()">✕</button></div><div class="modal-body" style="text-align:center;padding:30px"><div style="font-size:1.2rem;font-weight:700;color:var(--c1)" id="textModalText"></div></div></div></div>
+
 <div class="modal-overlay" id="commentModal"><div class="modal"><div class="modal-header"><div class="modal-title">评论</div><button class="modal-close" id="cmClose">✕</button></div><div class="modal-body" id="commentList"></div><div class="modal-footer"><div class="rf-form"><input type="text" id="commentAuthorInput" placeholder="你的昵称" maxlength="20"><input type="text" id="commentTextInput" placeholder="写下你的想法..." style="flex:2"><button class="btn btn-p btn-sm" id="btnPostCm">发送</button></div></div></div></div>
 <div class="modal-overlay" id="sponsorModal"><div class="modal" style="max-width:400px"><div class="modal-header"><div class="modal-title">支持作者</div><button class="modal-close" id="spClose">✕</button></div><div class="modal-body" style="text-align:center"><p style="margin-bottom:14px;color:var(--tx2);font-size:.8rem" id="sponsorMsg"></p><div class="qr-grid"><div><div class="qr-ph">敬请期待</div><div style="font-size:.62rem;color:var(--tx3);margin-top:4px">微信赞赏</div></div><div><div class="qr-ph">敬请期待</div><div style="font-size:.62rem;color:var(--tx3);margin-top:4px">支付宝</div></div></div></div></div></div>
 <div class="modal-overlay" id="articleDetailModal"><div class="modal" style="max-width:720px;max-height:86vh"><div class="modal-header"><button class="modal-close" id="adBack">← 返回</button><div class="modal-title" id="articleDetailTitle">文章详情</div><button class="modal-close" id="adClose">✕</button></div><div class="modal-body" id="articleDetailBody"></div><div class="modal-footer"><button class="btn btn-p btn-sm" id="adCommentBtn">💬 评论</button></div></div></div>
@@ -371,8 +375,14 @@ function applySiteData(){
   var av=el('sidebarAvatar');if(s.avatar)av.innerHTML='<img src="'+s.avatar+'" alt="avatar">';
   // Show visitor welcome if logged in
   try{var v=JSON.parse(localStorage.getItem(VK));if(v&&v.nick){el('welcomeVisitor').style.display='block';el('welcomeVisitorName').textContent=v.nick}}catch(e){}
-  var social=siteData.social||{};var icons=[{k:'wechat',bg:'#07C160'},{k:'qq',bg:'#12B7F5'},{k:'email',bg:'#f97316'},{k:'bilibili',bg:'#FB7299'},{k:'douyin',bg:'#fff'},{k:'github',bg:'#fafafa'}];
-  el('sidebarSocial').innerHTML=icons.map(function(i){var url=social[i.k];var s='<svg viewBox="0 0 24 24" width="14" height="14"><circle cx="12" cy="12" r="10" fill="'+i.bg+'"/></svg>';if(url)return'<a class="s-dot" href="'+url+'" target="_blank" style="background:'+i.bg+'">'+s+'</a>';return'<span class="s-dot off" style="background:'+i.bg+'">'+s+'</span>'}).join('');
+  var icons=[{k:'wechat',bg:'#07C160',label:'微信'},{k:'qq',bg:'#12B7F5',label:'QQ'},{k:'email',bg:'#f97316',label:'邮箱'},{k:'bilibili',bg:'#FB7299',label:'B站'},{k:'douyin',bg:'#fff',label:'抖音'},{k:'github',bg:'#fafafa',label:'GitHub'}];
+  el('sidebarSocial').innerHTML=icons.map(function(i){var s='<svg viewBox="0 0 24 24" width="14" height="14"><circle cx="12" cy="12" r="10" fill="'+i.bg+'"/></svg>';return'<span class="s-dot" style="background:'+i.bg+';cursor:pointer" title="'+i.label+'" id="soc-'+i.k+'">'+s+'</span>'}).join('');
+  el('soc-wechat')&&el('soc-wechat').addEventListener('click',function(){showQRModal('wx')});
+  el('soc-qq')&&el('soc-qq').addEventListener('click',function(){showQRModal('qq')});
+  el('soc-email')&&el('soc-email').addEventListener('click',function(){showEmailModal()});
+  el('soc-bilibili')&&el('soc-bilibili').addEventListener('click',function(){window.open('https://space.bilibili.com/66777274','_blank')});
+  el('soc-douyin')&&el('soc-douyin').addEventListener('click',function(){showTextModal('抖音号','JSYL1220')});
+  el('soc-github')&&el('soc-github').addEventListener('click',function(){window.open('https://github.com/JS1Lan','_blank')});
   if(!(siteData.sponsor&&siteData.sponsor.enabled))el('sponsorEntry').classList.add('hidden');
   var theme=s.theme||'dark';document.documentElement.setAttribute('data-theme',theme);
   if(s.bgImage)el('bgImage').style.backgroundImage='url('+s.bgImage+')';
@@ -556,11 +566,20 @@ el('articleDetailModal').addEventListener('click',function(e){if(e.target===this
 // ═══════ SPONSOR ═══════
 function openSponsor(){var s=siteData.sponsor;if(s&&s.text)el('sponsorMsg').textContent=s.text;el('sponsorModal').classList.add('open')}
 function closeSponsor(){el('sponsorModal').classList.remove('open')}
+function showQRModal(type){var t=type==='wx'?'微信扫码加好友':'QQ扫码加好友';var img=type==='wx'?'wx-qr.png':'qq-qr.png';el('qrModalTitle').textContent=t;el('qrModalImg').src=img+'?v=1';el('qrModal').classList.add('open')}
+function closeQRModal(){el('qrModal').classList.remove('open')}
+function showEmailModal(){el('emailModal').classList.add('open')}
+function closeEmailModal(){el('emailModal').classList.remove('open')}
+function showTextModal(title,text){el('textModalTitle').textContent=title;el('textModalText').textContent=text;el('textModal').classList.add('open')}
+function closeTextModal(){el('textModal').classList.remove('open')}
 el('sponsorEntry').addEventListener('click',openSponsor);el('spClose').addEventListener('click',closeSponsor);
 el('sponsorModal').addEventListener('click',function(e){if(e.target===this)closeSponsor()});
 
 // ═══════ KEYBOARD ═══════
-document.addEventListener('keydown',function(e){if(e.key==='Escape'){closeComments();closeSponsor();closeArticleDetail()}});
+document.getElementById('qrModal').addEventListener('click',function(e){if(e.target===this)closeQRModal()});
+document.getElementById('emailModal').addEventListener('click',function(e){if(e.target===this)closeEmailModal()});
+document.getElementById('textModal').addEventListener('click',function(e){if(e.target===this)closeTextModal()});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'){closeComments();closeSponsor();closeArticleDetail();closeQRModal();closeEmailModal();closeTextModal()}});
 
 // ═══════ RESTORE ═══════
 (function(){try{var t=localStorage.getItem('blog-theme');if(t)document.documentElement.setAttribute('data-theme',t);var l=localStorage.getItem('blog-lang');if(l){currentLang=l;el('btnLang').textContent=l==='zh'?'EN':'中'}}catch(e){}})();
