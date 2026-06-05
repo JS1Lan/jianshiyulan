@@ -51,8 +51,9 @@ var SITE=null,SK='blogData';
 function esc(s){if(!s)return'';return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
 
 // Load data
-function ld(){
+async function ld(){
   try{var s=localStorage.getItem(SK);if(s)SITE=JSON.parse(s)}catch(e){}
+  if(!SITE){try{var r=await fetch('data.json');if(r.ok){SITE=await r.json();localStorage.setItem(SK,JSON.stringify(SITE))}}catch(e){}}
   if(!SITE||!SITE.deltaForce)SITE={deltaForce:{date:'',passwords:[{map:'零号大坝',code:'----',bgImage:''},{map:'长弓溪谷',code:'----',bgImage:''},{map:'巴克什',code:'----',bgImage:''},{map:'航天基地',code:'----',bgImage:''},{map:'潮汐监狱',code:'----',bgImage:''}],exchangeItems:[]}};
   renderAll()
 }
