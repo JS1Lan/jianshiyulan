@@ -9,6 +9,10 @@
     "bgImage": "bg.webp",
     "theme": "dark"
   },
+  "announcement": { "preview": "博客已开始正式运行", "detail": "博客已开始正式运行，持续更新中" },
+  "timeline": [
+    { "date": "2026-06-06", "text": "**补充博客内容** ing", "isNew": true }
+  ],
   "social": {
     "wechat": "",
     "qq": "",
