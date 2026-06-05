@@ -35,7 +35,10 @@
       { "map": "航天基地", "code": "6291", "icon": "🚀" },
       { "map": "潮汐监狱", "code": "8537", "icon": "🏝" }
     ],
-    "exchangeItems": [],
+    "exchangeItems": [
+      { "name": "多用途电池", "desc": "", "cost": "", "startDate": "", "endDate": "" },
+      { "name": "液晶显示屏", "desc": "", "cost": "", "startDate": "", "endDate": "" }
+    ],
     "exchangePeriod": "",
     "gunCodes": []
   },
