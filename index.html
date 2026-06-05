@@ -21,7 +21,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--txt);min-height:10
 .wb1{width:500px;height:500px;left:-8%;top:-20%;background:var(--c1)}.wb2{width:380px;height:380px;right:-5%;bottom:-15%;background:var(--c2);animation:drift 12s ease-in-out infinite}
 @keyframes drift{0%,100%{transform:translate(0,0)}50%{transform:translate(-35px,30px)}}
 .welcome-content{position:relative;z-index:1;text-align:center;padding:20px}
-.welcome-title{font-size:clamp(3rem,7vw,5.5rem);font-weight:900;letter-spacing:4px;margin-bottom:12px;line-height:1.05}
+.welcome-greeting{font-size:.8rem;color:var(--tx3);letter-spacing:6px;margin-bottom:12px;text-transform:uppercase;font-weight:500}
+.welcome-title{font-size:clamp(3rem,7vw,5.5rem);font-weight:900;letter-spacing:4px;margin-bottom:6px;line-height:1.05}
 .welcome-sub{font-size:clamp(.85rem,2vw,1.1rem);color:var(--tx2);font-weight:300;letter-spacing:3px;margin-bottom:60px}
 .welcome-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
 .w-btn{padding:14px 44px;border-radius:50px;font-size:.88rem;font-weight:600;cursor:pointer;border:none;font-family:var(--font);letter-spacing:1px;transition:all var(--t)}
@@ -253,6 +254,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--txt);min-height:10
 <div class="welcome-overlay" id="welcomeOverlay">
 <div class="welcome-bg"><div class="wb1"></div><div class="wb2"></div></div>
 <div class="welcome-content">
+<div class="welcome-greeting">欢迎光临我的博客</div>
 <div class="welcome-title" id="welcomeName">笺事语阑</div>
 <div class="welcome-sub" id="welcomeSig">准备得太久，你就没有办法开始</div>
 <div class="welcome-btns">
