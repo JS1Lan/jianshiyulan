@@ -1,0 +1,250 @@
+{
+  "smg": [
+    {
+      "name": "MK4",
+      "schemes": [
+        {
+          "label": "默认",
+          "desc": "MK4冲锋枪-烽火地带-6K8NP4O03LDNIGA3OTH0A",
+          "code": "6K8NP4O03LDNIGA3OTH0A"
+        }
+      ]
+    },
+    {
+      "name": "QCQ-171",
+      "schemes": [
+        {
+          "label": "默认",
+          "desc": "QCQ171冲锋枪-烽火地带-6K14H1S03LDNIGA3OTH0A",
+          "code": "6K14H1S03LDNIGA3OTH0A"
+        }
+      ]
+    },
+    {
+      "name": "MP7",
+      "schemes": [
+        {
+          "label": "经济版",
+          "desc": "MP7冲锋枪-烽火地带-6K8NPM003LDNIGA3OTH0A",
+          "code": "6K8NPM003LDNIGA3OTH0A"
+        }
+      ]
+    },
+    {
+      "name": "SR-3M",
+      "schemes": [
+        {
+          "label": "低配腰瞄兼顾",
+          "desc": "SR-3M紧凑突击步枪-烽火地带-6K8NPPC03LDNIGA3OTH0A",
+          "code": "6K8NPPC03LDNIGA3OTH0A"
+        },
+        {
+          "label": "高配腰瞄兼顾",
+          "desc": "SR-3M紧凑突击步枪-烽火地带-6K8NPU403LDNIGA3OTH0A",
+          "code": "6K8NPU403LDNIGA3OTH0A"
+        }
+      ]
+    },
+    {
+      "name": "SMG-45",
+      "schemes": [
+        {
+          "label": "机密修脚",
+          "desc": "SMG-45冲锋枪-烽火地带-6K8NQ3003LDNIGA3OTH0A",
+          "code": "6K8NQ3003LDNIGA3OTH0A"
+        }
+      ]
+    }
+  ],
+  "sniper": [
+    {
+      "name": "AWM",
+      "schemes": [
+        {
+          "label": "高操控",
+          "desc": "AWM狙击步枪-烽火地带-6K8NRGC03LDNIGA3OTH0A",
+          "code": "6K8NRGC03LDNIGA3OTH0A"
+        }
+      ]
+    },
+    {
+      "name": "M700",
+      "schemes": [
+        {
+          "label": "高操控",
+          "desc": "M700狙击步枪-烽火地带-6K8NRJK03LDNIGA3OTH0A",
+          "code": "6K8NRJK03LDNIGA3OTH0A"
+        }
+      ]
+    }
+  ],
+  "rifle": [
+    {
+      "name": "AR-57",
+      "schemes": [
+        {
+          "label": "默认",
+          "desc": "AR57突击步枪-烽火地带-6K8NLN003LDNIGA3OTH0A",
+          "code": "6K8NLN003LDNIGA3OTH0A"
+        }
+      ]
+    },
+    {
+      "name": "MCTX LT",
+      "schemes": [
+        {
+          "label": "默认",
+          "desc": "MCX LT突击步枪-烽火地带-6K8NM3S03LDNIGA3OTH0A",
+          "code": "6K8NM3S03LDNIGA3OTH0A"
+        }
+      ]
+    },
+    {
+      "name": "KC-17",
+      "schemes": [
+        {
+          "label": "棱镜二倍",
+          "desc": "KC17突击步枪-烽火地带-6K8NMEK03LDNIGA3OTH0A",
+          "code": "6K8NMEK03LDNIGA3OTH0A"
+        }
+      ]
+    },
+    {
+      "name": "K437",
+      "schemes": [
+        {
+          "label": "默认",
+          "desc": "K437突击步枪-烽火地带-6K8NMMS03LDNIGA3OTH0A",
+          "code": "6K8NMMS03LDNIGA3OTH0A"
+        }
+      ]
+    },
+    {
+      "name": "腾龙",
+      "schemes": [
+        {
+          "label": "高导",
+          "desc": "腾龙突击步枪-烽火地带-6K8NMQS03LDNIGA3OTH0A",
+          "code": "6K8NMQS03LDNIGA3OTH0A"
+        }
+      ]
+    },
+    {
+      "name": "Asval",
+      "schemes": [
+        {
+          "label": "正常版",
+          "desc": "AS Val突击步枪-烽火地带-6JUQR5403LDNIGA3OTH0A",
+          "code": "6JUQR5403LDNIGA3OTH0A"
+        },
+        {
+          "label": "1.5倍",
+          "desc": "AS Val突击步枪-烽火地带-6JR5M6803LDNIGA3OTH0A",
+          "code": "6JR5M6803LDNIGA3OTH0A"
+        }
+      ]
+    },
+    {
+      "name": "M7",
+      "schemes": [
+        {
+          "label": "牺牲操控版",
+          "desc": "M7战斗步枪-烽火地带-6K8NOP803LDNIGA3OTH0A",
+          "code": "6K8NOP803LDNIGA3OTH0A"
+        },
+        {
+          "label": "综合版",
+          "desc": "M7战斗步枪-烽火地带-6K8NOS003LDNIGA3OTH0A",
+          "code": "6K8NOS003LDNIGA3OTH0A"
+        }
+      ]
+    },
+    {
+      "name": "K416",
+      "schemes": [
+        {
+          "label": "默认",
+          "desc": "K416突击步枪-烽火地带-6K8NOUO03LDNIGA3OTH0A",
+          "code": "6K8NOUO03LDNIGA3OTH0A"
+        }
+      ]
+    },
+    {
+      "name": "AK",
+      "schemes": [
+        {
+          "label": "默认",
+          "desc": "AKM突击步枪-烽火地带-6K8NP1G03LDNIGA3OTH0A",
+          "code": "6K8NP1G03LDNIGA3OTH0A"
+        }
+      ]
+    },
+    {
+      "name": "MK-47",
+      "schemes": [
+        {
+          "label": "BUG近战",
+          "desc": "MK47突击步枪-烽火地带-6K8NQEG03LDNIGA3OTH0A",
+          "code": "6K8NQEG03LDNIGA3OTH0A"
+        },
+        {
+          "label": "常规长枪管",
+          "desc": "MK47突击步枪-烽火地带-6K8NQLO03LDNIGA3OTH0A",
+          "code": "6K8NQLO03LDNIGA3OTH0A"
+        }
+      ]
+    }
+  ],
+  "dmr": [
+    {
+      "name": "杠杆",
+      "schemes": [
+        {
+          "label": "默认",
+          "desc": "杠杆式步枪-烽火地带-6K8NQR803LDNIGA3OTH0A",
+          "code": "6K8NQR803LDNIGA3OTH0A"
+        }
+      ]
+    },
+    {
+      "name": "SR-25",
+      "schemes": [
+        {
+          "label": "速点",
+          "desc": "SR-25射手步枪-烽火地带-6K8NR2403LDNIGA3OTH0A",
+          "code": "6K8NR2403LDNIGA3OTH0A"
+        }
+      ]
+    },
+    {
+      "name": "SKS",
+      "schemes": [
+        {
+          "label": "速点",
+          "desc": "SKS射手步枪-烽火地带-6K15IUC03LDNIGA3OTH0A",
+          "code": "6K15IUC03LDNIGA3OTH0A"
+        }
+      ]
+    },
+    {
+      "name": "M14",
+      "schemes": [
+        {
+          "label": "高手14",
+          "desc": "M14射手步枪-烽火地带-6JV1LBG03LDNIGA3OTH0A",
+          "code": "6JV1LBG03LDNIGA3OTH0A"
+        }
+      ]
+    },
+    {
+      "name": "SVD",
+      "schemes": [
+        {
+          "label": "高操控",
+          "desc": "SVD狙击步枪-烽火地带-6K8NRAC03LDNIGA3OTH0A",
+          "code": "6K8NRAC03LDNIGA3OTH0A"
+        }
+      ]
+    }
+  ]
+}
