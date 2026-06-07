@@ -505,29 +505,29 @@ footer span{color:#00f0ff}
     <div class="announce-detail">博客已开始正式运行，持续更新中</div>
   </div>
 
-  <!-- Featured Article (placeholder) -->
-  <div class="featured reveal">
+  <!-- Featured Article -->
+  <div class="featured reveal" onclick="openArticle(0)" style="cursor:pointer">
     <div class="featured-img">&#9636;</div>
     <div class="featured-body">
-      <div class="featured-meta">精选 . 即将更新</div>
-      <h2 class="featured-title">AI 学习之路：从零开始的探索笔记</h2>
-      <p class="featured-desc">记录在 AI 领域的学习历程，涵盖 LLM、Agent 开发、提示工程等方向。内容持续补充中，敬请期待。</p>
+      <div class="featured-meta">精选 . 心得体会 . 2026-06-07</div>
+      <h2 class="featured-title">Claude Code 接入 DeepSeek 完整教程</h2>
+      <p class="featured-desc">从零开始的详细指南：安装 Claude Code、配置 CC-Switch、接入 DeepSeek v4 Pro 模型。包含 9 个常见踩坑点及解决方案。</p>
       <div class="featured-tags">
-        <span>AI研习录</span><span>学习笔记</span><span>持续更新</span>
+        <span>DeepSeek</span><span>Claude Code</span><span>CC-Switch</span><span>心得体会</span>
       </div>
     </div>
   </div>
 
   <div class="neon-divider reveal"></div>
 
-  <!-- Latest Articles (placeholders) -->
+  <!-- Latest Articles -->
   <h2 class="section-title reveal">最新文章</h2>
   <div class="articles-grid">
-    <div class="article-card reveal">
-      <div class="meta">即将更新</div>
-      <h3>Claude Code 自定义 Skills 开发指南</h3>
-      <p>全面拆解 Superpowers 框架下的 Skill 开发模式，包含配置详解与最佳实践。</p>
-      <span class="empty-tag">撰文中</span></div>
+    <div class="article-card reveal" onclick="openArticle(0)">
+      <div class="meta">2026-06-07 . 心得体会</div>
+      <h3>Claude Code 接入 DeepSeek 完整教程</h3>
+      <p>从零开始的详细指南，包含 9 个常见踩坑点及解决方案。</p>
+      <span class="empty-tag" style="color:#00f0ff;border-color:rgba(0,240,255,.3)">阅读全文</span></div>
     <div class="article-card reveal">
       <div class="meta">即将更新</div>
       <h3>LLM 提示工程实战：结构化输出的 7 种模式</h3>
@@ -801,6 +801,15 @@ footer span{color:#00f0ff}
 // === DATA ===
 
 // Section articles - organized by category
+// Full article content storage
+var fullArticles = [
+  {id:0,title:"Claude Code 接入 DeepSeek 完整教程",date:"2026-06-07",category:"thoughts",
+   desc:"从零开始的详细指南：安装 Claude Code、配置 CC-Switch、接入 DeepSeek v4 Pro 模型。包含 9 个常见踩坑点及解决方案，适合首次接触 Node.js 生态的用户。",
+   tags:["DeepSeek","Claude Code","CC-Switch","API配置","模型接入"],
+   content:'<h2>前言</h2><p>关于 DeepSeek 接入 Claude Code 的教程，互联网上虽然有不少，但多数平台（如抖音、B站）上的内容只给出关键步骤，缺乏完整的环境配置细节。本文记录了每一步操作中可能遇到的报错及解决方案，确保即使从零开始也能顺利跑通。</p><h2>第一章：安装 Claude Code</h2><h3>坑点 1：官方安装脚本在国内直接失效</h3><p>在 Windows PowerShell 中执行官方命令 <code>irm https://claude.ai/install.ps1 | iex</code> 会报错：<br><code>curl.exe failed with exit code 35</code><br><code>SSL/TLS connection failed</code></p><p><b>原因：</b>官方脚本实际指向 Github 等境外服务器下载文件，国内网络无法稳定建立 SSL/TLS 连接。</p><p><b>方案：改用 npm 安装路线</b></p><p>步骤 1：安装 Node.js（国内镜像）<br><code>https://npmmirror.com/mirrors/node/v22.14.0/node-v22.14.0-x64.msi</code><br>双击安装，关键勾选 Add to PATH。</p><p>步骤 2：配置 npm 国内镜像<br>以管理员身份打开 PowerShell：<br><code>npm config set registry https://registry.npmmirror.com</code></p><p>步骤 3：全局安装 Claude Code<br><code>npm install -g @anthropic-ai/claude-code</code></p><h3>坑点 2：PowerShell 执行策略阻止</h3><p>执行 npm 命令时报错：<br><code>无法加载文件 npm.ps1，因为在此系统上禁止运行脚本</code></p><p><b>方案：</b>管理员 PowerShell 中执行：<br><code>Set-ExecutionPolicy RemoteSigned -Scope CurrentUser</code><br>提示时输入 Y 回车确认。</p><h3>坑点 3：环境变量未刷新</h3><p>npm 提示安装成功，但执行 <code>cc --version</code> 显示找不到命令。</p><p><b>方案：</b>完全关闭 PowerShell 窗口，重新以管理员身份打开，再试。</p><h3>坑点 4：npm 全局路径未加入系统 PATH</h3><p>重开终端后仍然找不到 cc 命令。</p><p><b>方案：</b>执行 <code>npm config get prefix</code> 获取路径（通常为 <code>C:\\Users\\用户名\\AppData\\Roaming\\npm</code>），手动添加到系统环境变量 Path 中。</p><h3>坑点 5：npm 安装未实际写入全局目录</h3><p><b>方案：</b>卸载后强制重装：<br><code>npm uninstall -g @anthropic-ai/claude-code</code><br><code>npm install -g @anthropic-ai/claude-code --force</code></p><p>或绕过全局安装直接使用：<br><code>npx @anthropic-ai/claude-code</code></p><h3>坑点 6：Git 未安装</h3><p>Claude Code 部分功能依赖 Git。</p><p><b>方案：</b>访问 <code>https://git-scm.com/download/win</code> 下载安装，全程默认选项即可。完成后验证：<code>git --version</code></p><h2>第二章：接入 DeepSeek v4 Pro 模型</h2><h3>坑点 7：CC-Switch 参数填写不正确</h3><p>安装 CC-Switch 后，点击右上角 "+" 选择 DeepSeek，严格按以下填写：</p><p>API Key：从 <code>https://www.deepseek.com</code> 进入 API 开放平台获取<br>模型参数按默认即可<br>在配置列表中选中该配置，点击"启用"</p><h3>坑点 8：API Key 获取流程</h3><p>1. 打开 <code>https://www.deepseek.com</code>，点击"API 开放平台"<br>2. 右侧找到 "API Key" 菜单<br>3. 点击"创建 API Key"，自定义名称<br>4. 生成后立即复制保存（关闭页面后无法再次查看）</p><h2>第三章：启动与验证</h2><h3>坑点 9：CC-Switch 未保持运行</h3><p>CC-Switch 必须保持打开且处于"启用"状态。它是本地代理层，Claude Code 通过它转发请求到 DeepSeek API。</p><p>正确流程：<br>1. 确保 CC-Switch 运行中，DeepSeek 配置已启用<br>2. 管理员 PowerShell 进入工作目录<br>3. 启动：<code>claude</code><br>4. 首次运行选择主题<br>5. 登录 Anthropic 官方账号<br>6. CC-Switch 自动拦截并转发到 DeepSeek</p><h2>总结</h2><p>以上 9 个坑点覆盖了从零搭建 Claude Code + DeepSeek 环境的完整流程。核心要点：用 npm 替代官方脚本安装、配置国内镜像源、确保 CC-Switch 始终保持运行。完成后即可在 Claude Code 中免费使用 DeepSeek v4 Pro 模型。</p>'
+  }
+];
+
 var sectionArticles = {
   notes: [], // 知识笔记
   thoughts: [
@@ -1288,9 +1297,13 @@ function showSectionArticles(cat){
   if(articles.length===0){
     list.innerHTML='<p style=\"color:#555577;text-align:center;padding:40px\">暂无文章，敬请期待</p>';
   }else{
-    list.innerHTML=articles.map(function(a){
-      return '<div style=\"background:rgba(10,10,30,.5);border:1px solid rgba(0,240,255,.08);border-radius:14px;padding:20px;margin-bottom:12px\">'+
-        '<h3 style=\"color:#00f0ff;font-size:1.05rem;margin-bottom:6px\">'+a.title+'</h3>'+
+    list.innerHTML=articles.map(function(a,idx){
+      var artId=fullArticles.findIndex(function(f){return f.title===a.title});
+      var artId=fullArticles.findIndex(function(f){return f.title===a.title});
+      var div=document.createElement('div');
+      div.style.cssText='background:rgba(10,10,30,.5);border:1px solid rgba(0,240,255,.08);border-radius:14px;padding:20px;margin-bottom:12px';
+      if(artId>=0){div.style.cursor='pointer';div.onclick=(function(id){return function(){openArticle(id);document.getElementById('sectionModal').style.display='none'}})(artId)}
+      div.innerHTML='<h3 style=\"color:#00f0ff;font-size:1.05rem;margin-bottom:6px\">'+(artId>=0?'&#128279; ':'')+a.title+'</h3>'+
         '<p style=\"color:#8888aa;font-size:.82rem;line-height:1.6;margin-bottom:10px\">'+a.desc+'</p>'+
         '<div style=\"display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px\">'+
           a.tags.map(function(t){return '<span style=\"font-size:.7rem;color:#555577;border:1px solid rgba(0,240,255,.12);padding:2px 8px;border-radius:10px\">'+t+'</span>'}).join('')+
@@ -1310,6 +1323,21 @@ document.getElementById('sectionModal').addEventListener('click',function(e){if(
   <p style="color:#8888aa;margin-top:14px;font-size:.8rem">点击空白处关闭</p>
 </div>
 <script>
+function openArticle(id){
+  var a=fullArticles[id];if(!a) return;
+  var m=document.getElementById('articleModal');
+  var t=document.getElementById('articleModalTitle');
+  var b=document.getElementById('articleModalBody');
+  t.textContent=a.title;
+  b.innerHTML='<div style=\"color:#8888aa;font-size:.8rem;margin-bottom:16px\">'+a.date+' . '+secNames[a.category]+'</div>'+
+    '<div style=\"display:flex;flex-wrap:wrap;gap:6px;margin-bottom:20px\">'+
+      a.tags.map(function(tg){return '<span style=\"font-size:.7rem;color:#00f0ff;border:1px solid rgba(0,240,255,.2);padding:3px 10px;border-radius:12px\">'+tg+'</span>'}).join('')+
+    '</div>'+
+    '<div style=\"color:#e8e8f0;line-height:1.9;font-size:.95rem\">'+a.content+'</div>';
+  m.style.display='flex';
+}
+document.getElementById('articleModal').addEventListener('click',function(e){if(e.target===this)this.style.display='none'});
+
 function showQR(type){
   var m=document.getElementById('qrModal');
   var img=document.getElementById('qrImage');
@@ -1319,6 +1347,17 @@ function showQR(type){
   m.style.display='flex';
 }
 </script>
+<!-- Article Reading Modal -->
+<div id="articleModal" style="display:none;position:fixed;inset:0;z-index:99997;background:rgba(0,0,0,.9);overflow-y:auto;padding:40px 20px" onclick="this.style.display='none'">
+  <div style="max-width:780px;margin:0 auto" onclick="event.stopPropagation()">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:28px">
+      <h1 id="articleModalTitle" style="color:#e8e8f0;font-size:1.6rem;font-weight:800;line-height:1.4;flex:1;padding-right:20px"></h1>
+      <span style="color:#00f0ff;font-size:2rem;cursor:pointer;flex-shrink:0" onclick="document.getElementById('articleModal').style.display='none'">&times;</span>
+    </div>
+    <div id="articleModalBody"></div>
+  </div>
+</div>
+
 <!-- Section Articles Modal -->
 <div id="sectionModal" style="display:none;position:fixed;inset:0;z-index:99998;background:rgba(0,0,0,.88);overflow-y:auto;padding:60px 20px" onclick="this.style.display='none'">
   <div style="max-width:680px;margin:0 auto" onclick="event.stopPropagation()">
