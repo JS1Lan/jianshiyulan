@@ -931,7 +931,7 @@ function drawWheel(){
     return;
   }
   var step = (2*Math.PI) / rouletteGuns.length;
-  var colors = ['rgba(0,240,255,.15)','rgba(0,240,255,.06)','rgba(255,0,170,.08)','rgba(0,240,255,.1)'];
+  var colors = ['rgba(0,240,255,.25)','rgba(0,240,255,.12)','rgba(255,0,170,.15)','rgba(0,240,255,.18)','rgba(100,200,255,.2)'];
   for(var i=0; i<rouletteGuns.length; i++){
     var startAngle = rouletteAngle + i*step;
     var endAngle = startAngle + step;
@@ -1196,18 +1196,27 @@ updatePlayButton();
 audio.volume = 0.08;
 document.getElementById('musicVolume').value = 8;
 
-// Pick random song, try auto-play, click-to-start fallback
-function pickRandomAndPlay(){
+// Pick random song, set src, mark ready. Play on first user interaction.
+var musicReady=false;
+setTimeout(function(){
   if(playlist.length===0) return;
   currentSongIndex=Math.floor(Math.random()*playlist.length);
-  audio.src=playlist[currentSongIndex].src||playlist[currentSongIndex].url;
+  audio.src=playlist[currentSongIndex].url;
+  audio.load();
+  musicReady=true;
+  // Try autoplay (usually blocked)
   audio.play().then(function(){
     isPlaying=true;updatePlayButton();updateMusicUI();updatePlaylistHighlight();
   }).catch(function(){});
-}
-setTimeout(pickRandomAndPlay,500);
-// If browser blocked, first click/tap anywhere triggers play
-document.addEventListener('click',pickRandomAndPlay,{once:true});
+},300);
+// First click/tap anywhere starts music if not already playing
+document.addEventListener('click',function(){
+  if(musicReady&&!isPlaying){
+    audio.play().then(function(){
+      isPlaying=true;updatePlayButton();updateMusicUI();updatePlaylistHighlight();
+    }).catch(function(){});
+  }
+});
 
 // Audio events
 audio.addEventListener('timeupdate', function(){
