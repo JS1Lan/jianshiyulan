@@ -1187,25 +1187,21 @@ audio.volume = 0.08;
 document.getElementById('musicVolume').value = 8;
 
 // Auto-play on load (browsers may block, fallback to first-click)
-setTimeout(function(){
-  if(playlist.length>0){
-    currentSongIndex=Math.floor(Math.random()*playlist.length);
-    var s=playlist[currentSongIndex];
-    audio.src=s.url;
-    audio.play().then(function(){
-      isPlaying=true;updatePlayButton();updateMusicUI();updatePlaylistHighlight();
-    }).catch(function(){
-      // Browser blocked autoplay, play on first user click
-      function playOnClick(){
-        audio.play().then(function(){
-          isPlaying=true;updatePlayButton();updateMusicUI();updatePlaylistHighlight();
-        }).catch(function(){});
-        document.removeEventListener('click',playOnClick);
-      }
-      document.addEventListener('click',playOnClick);
-    });
-  }
-},600);
+var autoPlayTried=false;
+function tryAutoPlay(){
+  if(autoPlayTried||playlist.length===0) return;
+  autoPlayTried=true;
+  currentSongIndex=Math.floor(Math.random()*playlist.length);
+  var s=playlist[currentSongIndex];
+  audio.src=s.url;
+  audio.play().then(function(){
+    isPlaying=true;updatePlayButton();updateMusicUI();updatePlaylistHighlight();
+  }).catch(function(){});
+}
+setTimeout(tryAutoPlay,500);
+// If blocked, music starts on first click/tap anywhere
+document.addEventListener('click',tryAutoPlay,{once:true});
+document.addEventListener('touchstart',tryAutoPlay,{once:true});
 
 // Audio events
 audio.addEventListener('timeupdate', function(){
