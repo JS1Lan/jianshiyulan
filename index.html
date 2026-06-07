@@ -1186,22 +1186,18 @@ updatePlayButton();
 audio.volume = 0.08;
 document.getElementById('musicVolume').value = 8;
 
-// Auto-play on load (browsers may block, fallback to first-click)
-var autoPlayTried=false;
-function tryAutoPlay(){
-  if(autoPlayTried||playlist.length===0) return;
-  autoPlayTried=true;
+// Pick random song, try auto-play, click-to-start fallback
+function pickRandomAndPlay(){
+  if(playlist.length===0) return;
   currentSongIndex=Math.floor(Math.random()*playlist.length);
-  var s=playlist[currentSongIndex];
-  audio.src=s.url;
+  audio.src=playlist[currentSongIndex].src||playlist[currentSongIndex].url;
   audio.play().then(function(){
     isPlaying=true;updatePlayButton();updateMusicUI();updatePlaylistHighlight();
   }).catch(function(){});
 }
-setTimeout(tryAutoPlay,500);
-// If blocked, music starts on first click/tap anywhere
-document.addEventListener('click',tryAutoPlay,{once:true});
-document.addEventListener('touchstart',tryAutoPlay,{once:true});
+setTimeout(pickRandomAndPlay,500);
+// If browser blocked, first click/tap anywhere triggers play
+document.addEventListener('click',pickRandomAndPlay,{once:true});
 
 // Audio events
 audio.addEventListener('timeupdate', function(){
