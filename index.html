@@ -1263,8 +1263,9 @@ document.addEventListener('click', function startMusic(){
   }
   audio.play().then(function(){
     isPlaying=true;updatePlayButton();updateMusicUI();updatePlaylistHighlight();
+    loadLyrics(currentSongIndex);
+    document.removeEventListener('click', startMusic);
   }).catch(function(e){console.log('play failed:',e)});
-  if(isPlaying) document.removeEventListener('click', startMusic);
 });
 
 // Audio events
