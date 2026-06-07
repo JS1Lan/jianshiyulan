@@ -611,10 +611,19 @@ footer span{color:#00f0ff}
   <h2 class="section-title reveal">资源链接</h2>
   <div class="links-section">
     <div class="resource-list">
-      <a href="#">AI学习资源</a>
-      <a href="#">开发者社区</a>
-      <a href="#">Claude Code 文档</a>
-      <a href="#">GitHub</a>
+      <a href="https://docs.anthropic.com/" target="_blank" rel="noopener">Anthropic 文档</a>
+      <a href="https://www.deepseek.com/" target="_blank" rel="noopener">DeepSeek</a>
+      <a href="https://open.bigmodel.cn/" target="_blank" rel="noopener">智谱AI</a>
+      <a href="https://www.aliyun.com/" target="_blank" rel="noopener">阿里云</a>
+      <a href="https://cloud.tencent.com/" target="_blank" rel="noopener">腾讯云</a>
+      <a href="https://ollama.com/" target="_blank" rel="noopener">ollama</a>
+      <a href="https://anythingllm.com/" target="_blank" rel="noopener">AnythingLLM</a>
+      <a href="https://platform.xiaomimomo.com/docs/zh-CN/welcome" target="_blank" rel="noopener">Xiaomi Mimo</a>
+      <a href="https://www.liblib.art/inspiration" target="_blank" rel="noopener">LiblibAI</a>
+      <a href="https://github.com/" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://stackoverflow.com/" target="_blank" rel="noopener">Stack Overflow</a>
+      <a href="https://dev.to/" target="_blank" rel="noopener">Dev.to</a>
+      <a href="https://www.indiehackers.com/" target="_blank" rel="noopener">Indie Hackers</a>
     </div>
   </div>
 
@@ -916,92 +925,50 @@ function renderRouletteGuns(){
 renderRouletteGuns();
 
 // === CANVAS ROULETTE ===
-var rouletteAngle = 0;
-var spinning = false;
-var spinVelocity = 0;
+var wheelRotation=0;
 var canvas = document.getElementById('rouletteCanvas');
 var ctx = canvas.getContext('2d');
 
 function drawWheel(){
-  var cx = canvas.width/2, cy = canvas.height/2, r = 155;
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  if(rouletteGuns.length === 0){
-    ctx.fillStyle = '#555577'; ctx.font = '16px PingFang SC,Microsoft YaHei,sans-serif';
-    ctx.textAlign = 'center'; ctx.fillText('请添加枪械', cx, cy);
+  var c=document.getElementById('rouletteCanvas');
+  var ctx=c.getContext('2d');
+  var cx=c.width/2, cy=c.height/2, r=150;
+  ctx.clearRect(0,0,c.width,c.height);
+  if(rouletteGuns.length===0){
+    ctx.fillStyle='#555577';ctx.font='14px PingFang SC,Microsoft YaHei,sans-serif';
+    ctx.textAlign='center';ctx.fillText('请添加枪械',cx,cy);
     return;
   }
-  var step = (2*Math.PI) / rouletteGuns.length;
-  var colors = ['rgba(0,240,255,.25)','rgba(0,240,255,.12)','rgba(255,0,170,.15)','rgba(0,240,255,.18)','rgba(100,200,255,.2)'];
-  for(var i=0; i<rouletteGuns.length; i++){
-    var startAngle = rouletteAngle + i*step;
-    var endAngle = startAngle + step;
-    ctx.beginPath();
-    ctx.moveTo(cx,cy);
-    ctx.arc(cx,cy,r,startAngle,endAngle);
-    ctx.closePath();
-    ctx.fillStyle = colors[i%colors.length];
-    ctx.fill();
-    ctx.strokeStyle = 'rgba(0,240,255,.2)';
-    ctx.lineWidth = 1;
-    ctx.stroke();
-
-    // Gun name text
-    ctx.save();
-    ctx.translate(cx,cy);
-    ctx.rotate(startAngle + step/2);
-    ctx.textAlign = 'right';
-    ctx.fillStyle = '#e8e8f0';
-    ctx.font = 'bold 12px PingFang SC,Microsoft YaHei,sans-serif';
-    ctx.fillText(rouletteGuns[i], r-14, 5);
-    ctx.restore();
+  var step=(2*Math.PI)/rouletteGuns.length;
+  var colors=['#00f0ff','#1a1a40','#ff00aa','#0a0a30','#00c8e8','#181835'];
+  for(var i=0;i<rouletteGuns.length;i++){
+    var s=i*step, e=s+step;
+    ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,r,s,e);ctx.closePath();
+    ctx.fillStyle=colors[i%colors.length];ctx.fill();
+    ctx.strokeStyle='rgba(255,255,255,.15)';ctx.lineWidth=1.5;ctx.stroke();
+    ctx.save();ctx.translate(cx,cy);ctx.rotate(s+step/2);
+    ctx.fillStyle='#fff';ctx.font='bold 11px PingFang SC,Microsoft YaHei,sans-serif';
+    ctx.textAlign='right';ctx.fillText(rouletteGuns[i],r-12,4);ctx.restore();
   }
-  // Center circle
-  ctx.beginPath();
-  ctx.arc(cx,cy,24,0,2*Math.PI);
-  ctx.fillStyle = 'rgba(5,5,16,.9)';
-  ctx.fill();
-  ctx.strokeStyle = '#00f0ff';
-  ctx.lineWidth = 2;
-  ctx.stroke();
+  ctx.beginPath();ctx.arc(cx,cy,28,0,Math.PI*2);ctx.fillStyle='rgba(5,5,16,.9)';ctx.fill();
+  ctx.strokeStyle='rgba(255,255,255,.2)';ctx.lineWidth=2;ctx.stroke();
 }
 
 function spinRoulette(){
-  if(spinning || rouletteGuns.length === 0) return;
-  spinning = true;
-  document.getElementById('rouletteResult').style.display = 'none';
-  // Random spin: 5-10 full rotations + random offset
-  var totalSpin = (5 + Math.random()*5) * 2*Math.PI + Math.random()*2*Math.PI;
-  spinVelocity = 0.35 + Math.random()*0.15; // Start velocity
-  var targetAngle = rouletteAngle + totalSpin;
-  var startAngle = rouletteAngle;
-  var startTime = performance.now();
-  var duration = 4000 + Math.random()*2000;
-
-  function animate(now){
-    var elapsed = now - startTime;
-    var progress = Math.min(elapsed/duration, 1);
-    // Ease out cubic
-    var eased = 1 - Math.pow(1-progress, 3);
-    rouletteAngle = startAngle + totalSpin * eased;
-    drawWheel();
-    if(progress < 1){
-      requestAnimationFrame(animate);
-    } else {
-      rouletteAngle = targetAngle;
-      drawWheel();
-      spinning = false;
-      // Determine winner
-      var step = (2*Math.PI) / rouletteGuns.length;
-      var normalized = ((rouletteAngle % (2*Math.PI)) + 2*Math.PI) % (2*Math.PI);
-      // Pointer is at top (0 radians = 3 o'clock, top is -PI/2)
-      var pointerAngle = (2*Math.PI - normalized + Math.PI/2) % (2*Math.PI);
-      var winnerIdx = Math.floor(pointerAngle / step) % rouletteGuns.length;
-      var result = document.getElementById('rouletteResult');
-      result.textContent = '选中: ' + rouletteGuns[winnerIdx];
-      result.style.display = 'block';
-    }
-  }
-  requestAnimationFrame(animate);
+  if(rouletteGuns.length===0) return;
+  var spins=5+Math.floor(Math.random()*5);
+  var extraDeg=Math.random()*360;
+  var totalDeg=spins*360+extraDeg;
+  wheelRotation+=totalDeg;
+  document.getElementById('rouletteCanvas').style.transform='rotate('+wheelRotation+'deg)';
+  document.getElementById('rouletteCanvas').style.transition='transform .7s cubic-bezier(.17,.67,.12,.99)';
+  setTimeout(function(){
+    var step=360/rouletteGuns.length;
+    var normalized=((wheelRotation%360)+360)%360;
+    var idx=Math.floor(((360-normalized+step/2)%360)/step)%rouletteGuns.length;
+    document.getElementById('rouletteResult').textContent='选中: '+rouletteGuns[idx];
+    document.getElementById('rouletteResult').style.display='block';
+  },750);
 }
 
 function addGun(name){
@@ -1044,8 +1011,8 @@ function addCustomGun(){
 }
 function resetGuns(){
   rouletteGuns = [];
-  rouletteAngle = 0;
-  spinning = false;
+  wheelRotation = 0;
+  document.getElementById('rouletteCanvas').style.transform='rotate(0deg)';
   document.getElementById('rouletteResult').style.display = 'none';
   renderRouletteGuns();
 }
@@ -1196,26 +1163,17 @@ updatePlayButton();
 audio.volume = 0.08;
 document.getElementById('musicVolume').value = 8;
 
-// Pick random song, set src, mark ready. Play on first user interaction.
-var musicReady=false;
-setTimeout(function(){
+// Music starts on first user click anywhere
+document.addEventListener('click', function startMusic(){
   if(playlist.length===0) return;
-  currentSongIndex=Math.floor(Math.random()*playlist.length);
-  audio.src=playlist[currentSongIndex].url;
-  audio.load();
-  musicReady=true;
-  // Try autoplay (usually blocked)
+  if(!isPlaying && currentSongIndex<0){
+    currentSongIndex=Math.floor(Math.random()*playlist.length);
+    audio.src=playlist[currentSongIndex].url;
+  }
   audio.play().then(function(){
     isPlaying=true;updatePlayButton();updateMusicUI();updatePlaylistHighlight();
-  }).catch(function(){});
-},300);
-// First click/tap anywhere starts music if not already playing
-document.addEventListener('click',function(){
-  if(musicReady&&!isPlaying){
-    audio.play().then(function(){
-      isPlaying=true;updatePlayButton();updateMusicUI();updatePlaylistHighlight();
-    }).catch(function(){});
-  }
+  }).catch(function(e){console.log('play failed:',e)});
+  if(isPlaying) document.removeEventListener('click', startMusic);
 });
 
 // Audio events
