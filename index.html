@@ -1236,24 +1236,50 @@ function updatePlaylistHighlight(){
   });
 }
 
+var lyricsData=[];
+
 function loadLyrics(index){
-  var box = document.getElementById('musicLyrics');
+  var box=document.getElementById('musicLyrics');
   if(!box||!playlist||index<0||index>=playlist.length) return;
-  var song = playlist[index];
-  if(!song||!song.lrc){
-    box.innerHTML = '<span style=\"color:#555577\">纯音乐，无歌词</span>';
-    return;
+  var song=playlist[index];
+  if(!song||!song.lrc){lyricsData=[];box.innerHTML='<span style=\"color:#555577\">纯音乐，无歌词</span>';return}
+  box.innerHTML='<span style=\"color:#555577\">加载歌词中...</span>';
+  fetch(song.lrc).then(function(r){if(!r.ok) throw new Error('HTTP '+r.status);return r.text()}).then(function(t){
+    lyricsData=[];
+    var lines=t.split('\n');
+    for(var i=0;i<lines.length;i++){
+      var m=lines[i].match(/\[(\d{2}):(\d{2})(?:\.(\d{2,3}))?\](.*)/);
+      if(m){
+        var min=parseInt(m[1]),sec=parseInt(m[2]),ms=parseInt(m[3]||'0');
+        if(ms<100)ms*=10;
+        lyricsData.push({time:min*60+sec+ms/1000,text:m[4].trim()||'...'});
+      }
+    }
+    lyricsData.sort(function(a,b){return a.time-b.time});
+    if(!lyricsData.length){box.innerHTML='<span style=\"color:#555577\">暂无歌词</span>';return}
+    renderLyrics();
+  }).catch(function(e){box.innerHTML='<span style=\"color:#555577\">歌词加载失败</span>';});
+}
+
+function renderLyrics(){
+  var box=document.getElementById('musicLyrics');
+  if(!box||!lyricsData.length) return;
+  var ct=audio.currentTime||0,cur=-1;
+  for(var i=0;i<lyricsData.length;i++){if(lyricsData[i].time<=ct)cur=i}
+  var html='';
+  for(var i=Math.max(0,cur-2);i<=Math.min(lyricsData.length-1,cur+3);i++){
+    var cls='';
+    if(i===cur) cls='lrc-cur';
+    else if(i<cur) cls='lrc-prev';
+    else cls='lrc-next';
+    html+='<div class=\"'+cls+'\" style=\"padding:2px 0;transition:all .3s;'+(i<cur?'opacity:.35;':i>cur?'opacity:.5;':'')+'\">'+lyricsData[i].text+'</div>';
   }
-  box.innerHTML = '<span style=\"color:#555577\">加载歌词中...</span>';
-  fetch(song.lrc).then(function(r){
-    if(!r.ok) throw 'HTTP '+r.status;
-    return r.text();
-  }).then(function(t){
-    var lines=t.split('\n').filter(function(l){return l.trim()});
-    box.innerHTML = lines.slice(0,10).map(function(l){return '<div>'+l.replace(/\[.*?\]/g,'').trim()+'</div>'}).join('')||'<span style=\"color:#555577\">暂无歌词</span>';
-  }).catch(function(e){
-    box.innerHTML = '<span style=\"color:#555577\">歌词加载失败 ('+e+')</span>';
-  });
+  box.innerHTML=html;
+  // Auto-scroll current line into view
+  setTimeout(function(){
+    var curEl=box.querySelector('.lrc-cur');
+    if(curEl) curEl.scrollIntoView({behavior:'smooth',block:'center'});
+  },100);
 }
 updatePlayButton();
 audio.volume = 0.08;
@@ -1283,6 +1309,7 @@ audio.addEventListener('timeupdate', function(){
     document.getElementById('musicCurTime').textContent = m+':'+(s<10?'0':'')+s;
     var dm = Math.floor(audio.duration/60), ds = Math.floor(audio.duration%60);
     document.getElementById('musicDurTime').textContent = dm+':'+(ds<10?'0':'')+ds;
+    renderLyrics();
   }
 });
 audio.addEventListener('ended', function(){
@@ -1431,22 +1458,21 @@ function openArticle(id){
   overlay.classList.add('open');
   document.body.style.overflow='hidden';
 
-  // Track active heading on scroll
-  var contentArea=document.getElementById('articleContentArea');
-  contentArea.addEventListener('scroll',function(){
-    var current='';
-    headings.forEach(function(h,i){
-      var rect=h.getBoundingClientRect();
-      if(rect.top>=0&&rect.top<300) current='sec-'+i;
+  // Track active heading via IntersectionObserver
+  var tocObserver=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){
+        document.querySelectorAll('.toc-link').forEach(function(l){l.classList.remove('active')});
+        var id=e.target.id;
+        var links=document.querySelectorAll('.toc-link');
+        links.forEach(function(l){
+          var oc=l.getAttribute('onclick')||'';
+          if(oc.indexOf(id)>=0) l.classList.add('active');
+        });
+      }
     });
-    document.querySelectorAll('.toc-link').forEach(function(l){l.classList.remove('active')});
-    if(current){
-      var links=document.querySelectorAll('.toc-link');
-      links.forEach(function(l){
-        if(l.getAttribute('onclick')&&l.getAttribute('onclick').indexOf(current)>=0) l.classList.add('active');
-      });
-    }
-  });
+  },{root:document.getElementById('articleContentArea'),rootMargin:'-20% 0px -60% 0px',threshold:0});
+  headings.forEach(function(h){tocObserver.observe(h)});
 }
 
 function closeArticle(){
