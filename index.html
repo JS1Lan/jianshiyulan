@@ -1238,16 +1238,21 @@ function updatePlaylistHighlight(){
 
 function loadLyrics(index){
   var box = document.getElementById('musicLyrics');
-  if(!box) return;
+  if(!box||!playlist||index<0||index>=playlist.length) return;
   var song = playlist[index];
-  if(!song.lrc){
+  if(!song||!song.lrc){
     box.innerHTML = '<span style=\"color:#555577\">纯音乐，无歌词</span>';
     return;
   }
-  fetch(song.lrc).then(function(r){return r.text()}).then(function(t){
-    box.innerHTML = t.split('\n').slice(0,8).map(function(l){return '<div>'+l.replace(/\[.*?\]/g,'')+'</div>'}).join('');
-  }).catch(function(){
-    box.innerHTML = '<span style=\"color:#555577\">歌词加载失败</span>';
+  box.innerHTML = '<span style=\"color:#555577\">加载歌词中...</span>';
+  fetch(song.lrc).then(function(r){
+    if(!r.ok) throw 'HTTP '+r.status;
+    return r.text();
+  }).then(function(t){
+    var lines=t.split('\n').filter(function(l){return l.trim()});
+    box.innerHTML = lines.slice(0,10).map(function(l){return '<div>'+l.replace(/\[.*?\]/g,'').trim()+'</div>'}).join('')||'<span style=\"color:#555577\">暂无歌词</span>';
+  }).catch(function(e){
+    box.innerHTML = '<span style=\"color:#555577\">歌词加载失败 ('+e+')</span>';
   });
 }
 updatePlayButton();
@@ -1428,17 +1433,20 @@ function openArticle(id){
 
   // Track active heading on scroll
   var contentArea=document.getElementById('articleContentArea');
-  contentArea.onscroll=function(){
+  contentArea.addEventListener('scroll',function(){
     var current='';
     headings.forEach(function(h,i){
-      if(h.getBoundingClientRect().top<200) current='sec-'+i;
+      var rect=h.getBoundingClientRect();
+      if(rect.top>=0&&rect.top<300) current='sec-'+i;
     });
     document.querySelectorAll('.toc-link').forEach(function(l){l.classList.remove('active')});
     if(current){
-      var activeLink=document.querySelector('.toc-link[onclick*=\"'+current+'\"]');
-      if(activeLink) activeLink.classList.add('active');
+      var links=document.querySelectorAll('.toc-link');
+      links.forEach(function(l){
+        if(l.getAttribute('onclick')&&l.getAttribute('onclick').indexOf(current)>=0) l.classList.add('active');
+      });
     }
-  };
+  });
 }
 
 function closeArticle(){
