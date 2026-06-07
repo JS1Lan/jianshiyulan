@@ -812,22 +812,24 @@ var sectionArticles = {
   projects: [] // 我的Project
 };
 
-// Music playlist (75 songs, embedded first 12 for display)
-var playlist = [
-  {title:"迷人的危险",artist:"Dance Flow",url:"https://jsyl-1440566486.cos.ap-guangzhou.myqcloud.com/music/Dance%20Flow%20-%20%E8%BF%B7%E4%BA%BA%E7%9A%84%E5%8D%B1%E9%99%A9.mp3",lrc:"https://jsyl-1440566486.cos.ap-guangzhou.myqcloud.com/music/geci/Dance%20Flow%20-%20%E8%BF%B7%E4%BA%BA%E7%9A%84%E5%8D%B1%E9%99%A9.lrc"},
-  {title:"多远都要在一起",artist:"G.E.M.邓紫棋",url:"https://jsyl-1440566486.cos.ap-guangzhou.myqcloud.com/music/G.E.M.%E9%82%93%E7%B4%AB%E6%A3%8B%20-%20%E5%A4%9A%E8%BF%9C%E9%83%BD%E8%A6%81%E5%9C%A8%E4%B8%80%E8%B5%B7.mp3",lrc:"https://jsyl-1440566486.cos.ap-guangzhou.myqcloud.com/music/geci/G.E.M.%E9%82%93%E7%B4%AB%E6%A3%8B%20-%20%E5%A4%9A%E8%BF%9C%E9%83%BD%E8%A6%81%E5%9C%A8%E4%B8%80%E8%B5%B7.lrc"},
-  {title:"Remember Me (Lullaby)",artist:"Gael Garcia Bernal",url:"https://jsyl-1440566486.cos.ap-guangzhou.myqcloud.com/music/Gael%20Garcia%20Bernal%20-%20Remember%20Me%20%28Lullaby%29%20%28From%20CocoSoundtrack%20Version%29.mp3",lrc:"https://jsyl-1440566486.cos.ap-guangzhou.myqcloud.com/music/geci/Gael%20Garcia%20Bernal%20-%20Remember%20Me%20%28Lullaby%29%20%28From%20CocoSoundtrack%20Version%29.lrc"},
-  {title:"若把你",artist:"Kirsty刘瑾睿",url:"https://jsyl-1440566486.cos.ap-guangzhou.myqcloud.com/music/Kirsty%E5%88%98%E7%91%BE%E7%9D%BF%20-%20%E8%8B%A5%E6%8A%8A%E4%BD%A0.mp3",lrc:"https://jsyl-1440566486.cos.ap-guangzhou.myqcloud.com/music/geci/Kirsty%E5%88%98%E7%91%BE%E7%9D%BF%20-%20%E8%8B%A5%E6%8A%8A%E4%BD%A0.lrc"},
-  {title:"初恋旧爱新欢",artist:"RAiNBOW计划,林力尧",url:"https://jsyl-1440566486.cos.ap-guangzhou.myqcloud.com/music/RAiNBOW%E8%AE%A1%E5%88%92%2C%E6%9E%97%E5%8A%9B%E5%B0%A7%20-%20%E5%88%9D%E6%81%8B%E6%97%A7%E7%88%B1%E6%96%B0%E6%AC%A2.mp3",lrc:"https://jsyl-1440566486.cos.ap-guangzhou.myqcloud.com/music/geci/RAiNBOW%E8%AE%A1%E5%88%92%2C%E6%9E%97%E5%8A%9B%E5%B0%A7%20-%20%E5%88%9D%E6%81%8B%E6%97%A7%E7%88%B1%E6%96%B0%E6%AC%A2.lrc"},
-  {title:"世界末日",artist:"S.B.D.W",url:"https://jsyl-1440566486.cos.ap-guangzhou.myqcloud.com/music/S.B.D.W%20-%20%E4%B8%96%E7%95%8C%E6%9C%AB%E6%97%A5.mp3",lrc:"https://jsyl-1440566486.cos.ap-guangzhou.myqcloud.com/music/geci/S.B.D.W%20-%20%E4%B8%96%E7%95%8C%E6%9C%AB%E6%97%A5.lrc"},
-  {title:"猜不透",artist:"丁当",url:"https://jsyl-1440566486.cos.ap-guangzhou.myqcloud.com/music/%E4%B8%81%E5%BD%93%20-%20%E7%8C%9C%E4%B8%8D%E9%80%8F.mp3",lrc:"https://jsyl-1440566486.cos.ap-guangzhou.myqcloud.com/music/geci/%E4%B8%81%E5%BD%93%20-%20%E7%8C%9C%E4%B8%8D%E9%80%8F.lrc"},
-  {title:"杀死那个石家庄人",artist:"万能青年旅店",url:"https://jsyl-1440566486.cos.ap-guangzhou.myqcloud.com/music/%E4%B8%87%E8%83%BD%E9%9D%92%E5%B9%B4%E6%97%85%E5%BA%97%20-%20%E6%9D%80%E6%AD%BB%E9%82%A3%E4%B8%AA%E7%9F%B3%E5%AE%B6%E5%BA%84%E4%BA%BA.mp3",lrc:"https://jsyl-1440566486.cos.ap-guangzhou.myqcloud.com/music/geci/%E4%B8%87%E8%83%BD%E9%9D%92%E5%B9%B4%E6%97%85%E5%BA%97%20-%20%E6%9D%80%E6%AD%BB%E9%82%A3%E4%B8%AA%E7%9F%B3%E5%AE%B6%E5%BA%84%E4%BA%BA.lrc"},
-  {title:"必杀技",artist:"古巨基",url:"https://jsyl-1440566486.cos.ap-guangzhou.myqcloud.com/music/%E5%8F%A4%E5%B7%A8%E5%9F%BA%20-%20%E5%BF%85%E6%9D%80%E6%8A%80.mp3",lrc:"https://jsyl-1440566486.cos.ap-guangzhou.myqcloud.com/music/geci/%E5%8F%A4%E5%B7%A8%E5%9F%BA%20-%20%E5%BF%85%E6%9D%80%E6%8A%80.lrc"},
-  {title:"冬眠",artist:"司南",url:"https://jsyl-1440566486.cos.ap-guangzhou.myqcloud.com/music/%E5%8F%B8%E5%8D%97%20-%20%E5%86%AC%E7%9C%A0.mp3",lrc:"https://jsyl-1440566486.cos.ap-guangzhou.myqcloud.com/music/geci/%E5%8F%B8%E5%8D%97%20-%20%E5%86%AC%E7%9C%A0.lrc"},
-  {title:"黄昏",artist:"周传雄",url:"https://jsyl-1440566486.cos.ap-guangzhou.myqcloud.com/music/%E5%91%A8%E4%BC%A0%E9%9B%84%20-%20%E9%BB%84%E6%98%8F.mp3",lrc:"https://jsyl-1440566486.cos.ap-guangzhou.myqcloud.com/music/geci/%E5%91%A8%E4%BC%A0%E9%9B%84%20-%20%E9%BB%84%E6%98%8F.lrc"},
-  {title:"永不失联的爱",artist:"周兴哲",url:"https://jsyl-1440566486.cos.ap-guangzhou.myqcloud.com/music/%E5%91%A8%E5%85%B4%E5%93%B2%20-%20%E6%B0%B8%E4%B8%8D%E5%A4%B1%E8%81%94%E7%9A%84%E7%88%B1.mp3",lrc:"https://jsyl-1440566486.cos.ap-guangzhou.myqcloud.com/music/geci/%E5%91%A8%E5%85%B4%E5%93%B2%20-%20%E6%B0%B8%E4%B8%8D%E5%A4%B1%E8%81%94%E7%9A%84%E7%88%B1.lrc"}
-];
-var totalSongs = 75;
+// Music playlist - loaded from playlist.json (75 songs)
+var playlist = [];
+var totalSongs = 0;
+fetch('playlist.json').then(function(r){return r.json()}).then(function(data){
+  playlist = data;
+  totalSongs = data.length;
+  document.getElementById('musicTotal').textContent = totalSongs + '首';
+  buildMusicPlaylist();
+}).catch(function(){
+  // Fallback: embed a few songs if JSON fails to load
+  playlist = [
+    {title:"迷人的危险",artist:"Dance Flow",url:"https://jsyl-1440566486.cos.ap-guangzhou.myqcloud.com/music/Dance%20Flow%20-%20%E8%BF%B7%E4%BA%BA%E7%9A%84%E5%8D%B1%E9%99%A9.mp3"},
+    {title:"多远都要在一起",artist:"G.E.M.邓紫棋",url:"https://jsyl-1440566486.cos.ap-guangzhou.myqcloud.com/music/G.E.M.%E9%82%93%E7%B4%AB%E6%A3%8B%20-%20%E5%A4%9A%E8%BF%9C%E9%83%BD%E8%A6%81%E5%9C%A8%E4%B8%80%E8%B5%B7.mp3"},
+    {title:"若把你",artist:"Kirsty刘瑾睿",url:"https://jsyl-1440566486.cos.ap-guangzhou.myqcloud.com/music/Kirsty%E5%88%98%E7%91%BE%E7%9D%BF%20-%20%E8%8B%A5%E6%8A%8A%E4%BD%A0.mp3"}
+  ];
+  totalSongs = playlist.length;
+  buildMusicPlaylist();
+});
 
 // Gun codes data (REAL from GQM files)
 var gunCodes = {
@@ -904,8 +906,10 @@ var musicExpanded = false;
 })();
 
 // Build music playlist UI
-(function buildPlaylist(){
+function buildMusicPlaylist(){
   var pl = document.getElementById('musicPlaylist');
+  if(!pl) return;
+  pl.innerHTML = '';
   playlist.forEach(function(song, i){
     var item = document.createElement('div');
     item.className = 'pl-item';
@@ -915,7 +919,7 @@ var musicExpanded = false;
     item.onclick = function(e){ e.stopPropagation(); playSong(i); };
     pl.appendChild(item);
   });
-})();
+}
 
 // Build roulette gun list
 function renderRouletteGuns(){
