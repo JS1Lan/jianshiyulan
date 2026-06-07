@@ -560,21 +560,21 @@ footer span{color:#00f0ff}
   <!-- Stats -->
   <h2 class="section-title reveal">内容板块</h2>
   <div class="stats-grid">
-    <div class="stat-card reveal">
-      <div class="stat-number">0</div>
-      <div class="stat-label">AI知识笔记</div>
+    <div class="stat-card reveal" onclick="showSectionArticles('notes')">
+      <div class="stat-number" id="count-notes">0</div>
+      <div class="stat-label">知识笔记</div>
     </div>
-    <div class="stat-card reveal">
-      <div class="stat-number">0</div>
+    <div class="stat-card reveal" onclick="showSectionArticles('thoughts')">
+      <div class="stat-number" id="count-thoughts">1</div>
+      <div class="stat-label">心得体会</div>
+    </div>
+    <div class="stat-card reveal" onclick="showSectionArticles('skills')">
+      <div class="stat-number" id="count-skills">0</div>
       <div class="stat-label">自制Skills</div>
     </div>
-    <div class="stat-card reveal">
-      <div class="stat-number">0</div>
-      <div class="stat-label">学习日志</div>
-    </div>
-    <div class="stat-card reveal">
-      <div class="stat-number">0</div>
-      <div class="stat-label">模板备忘</div>
+    <div class="stat-card reveal" onclick="showSectionArticles('projects')">
+      <div class="stat-number" id="count-projects">0</div>
+      <div class="stat-label">我的Project</div>
     </div>
   </div>
 
@@ -799,6 +799,18 @@ footer span{color:#00f0ff}
 
 <script>
 // === DATA ===
+
+// Section articles - organized by category
+var sectionArticles = {
+  notes: [], // 知识笔记
+  thoughts: [
+    {title:"Claude Code 接入 DeepSeek 完整教程", date:"2026-06-07",
+     desc:"从零开始的详细指南：安装 Claude Code、配置 CC-Switch、接入 DeepSeek v4 Pro 模型。包含 9 个常见踩坑点及解决方案，适合首次接触 Node.js 生态的用户。",
+     tags:["DeepSeek","Claude Code","CC-Switch","API配置","模型接入"]}
+  ],
+  skills: [], // 自制Skills
+  projects: [] // 我的Project
+};
 
 // Music playlist (75 songs, embedded first 12 for display)
 var playlist = [
@@ -1260,6 +1272,32 @@ drawWheel();
 if('serviceWorker' in navigator){
   navigator.serviceWorker.register('sw.js').catch(function(){});
 }
+
+// Section articles popup
+var secNames={notes:'知识笔记',thoughts:'心得体会',skills:'自制Skills',projects:'我的Project'};
+function showSectionArticles(cat){
+  var articles=sectionArticles[cat]||[];
+  var m=document.getElementById('sectionModal');
+  var t=document.getElementById('sectionModalTitle');
+  var list=document.getElementById('sectionArticleList');
+  t.textContent=secNames[cat];
+  if(articles.length===0){
+    list.innerHTML='<p style=\"color:#555577;text-align:center;padding:40px\">暂无文章，敬请期待</p>';
+  }else{
+    list.innerHTML=articles.map(function(a){
+      return '<div style=\"background:rgba(10,10,30,.5);border:1px solid rgba(0,240,255,.08);border-radius:14px;padding:20px;margin-bottom:12px\">'+
+        '<h3 style=\"color:#00f0ff;font-size:1.05rem;margin-bottom:6px\">'+a.title+'</h3>'+
+        '<p style=\"color:#8888aa;font-size:.82rem;line-height:1.6;margin-bottom:10px\">'+a.desc+'</p>'+
+        '<div style=\"display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px\">'+
+          a.tags.map(function(t){return '<span style=\"font-size:.7rem;color:#555577;border:1px solid rgba(0,240,255,.12);padding:2px 8px;border-radius:10px\">'+t+'</span>'}).join('')+
+        '</div>'+
+        '<span style=\"font-size:.72rem;color:#555577\">'+a.date+'</span>'+
+      '</div>';
+    }).join('');
+  }
+  m.style.display='flex';
+}
+document.getElementById('sectionModal').addEventListener('click',function(e){if(e.target===this)this.style.display='none'});
 </script>
 
 <!-- QR Modal -->
@@ -1277,5 +1315,16 @@ function showQR(type){
   m.style.display='flex';
 }
 </script>
+<!-- Section Articles Modal -->
+<div id="sectionModal" style="display:none;position:fixed;inset:0;z-index:99998;background:rgba(0,0,0,.88);overflow-y:auto;padding:60px 20px" onclick="this.style.display='none'">
+  <div style="max-width:680px;margin:0 auto" onclick="event.stopPropagation()">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:28px">
+      <h2 id="sectionModalTitle" style="color:#e8e8f0;font-size:1.5rem;font-weight:700"></h2>
+      <span style="color:#00f0ff;font-size:2rem;cursor:pointer" onclick="document.getElementById('sectionModal').style.display='none'">&times;</span>
+    </div>
+    <div id="sectionArticleList"></div>
+  </div>
+</div>
+
 </body>
 </html>
