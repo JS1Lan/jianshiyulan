@@ -76,8 +76,10 @@ nav{
   color:#e8e8f0;text-shadow:0 0 30px rgba(0,240,255,.3)
 }
 .word-accent{
-  color:#00f0ff;
-  text-shadow:0 0 40px rgba(0,240,255,.45),0 0 80px rgba(0,240,255,.2)
+  background:linear-gradient(135deg,#00f0ff 20%,#a78bfa 50%,#ff6b9d 80%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+  filter:drop-shadow(0 0 40px rgba(0,240,255,.45)) drop-shadow(0 0 80px rgba(167,139,250,.3))
 }
 @keyframes wordReveal{
   0%{opacity:0;transform:translateY(40px)}
@@ -108,9 +110,16 @@ nav{
 }
 .hero-keywords span:hover{color:#00f0ff;border-color:rgba(0,240,255,.35)}
 .hero-signature{
-  font-size:1.05rem;color:#8888aa;max-width:560px;line-height:1.8;margin-bottom:36px;
+  font-size:1.05rem;color:#8888aa;max-width:560px;line-height:1.8;margin-bottom:20px;
   opacity:0;animation:fadeUp .7s 1.2s cubic-bezier(.22,.61,.36,1) forwards
 }
+.hero-cta-wrap{opacity:0;animation:fadeUp .7s 1.2s cubic-bezier(.22,.61,.36,1) forwards;margin-bottom:36px}
+.hero-cta-btn{
+  display:inline-block;padding:12px 36px;border:1px solid rgba(0,240,255,.3);
+  border-radius:28px;color:#00f0ff;font-size:.95rem;letter-spacing:.05em;cursor:pointer;
+  background:rgba(0,240,255,.06);transition:all .35s;text-decoration:none
+}
+.hero-cta-btn:hover{background:rgba(0,240,255,.15);box-shadow:0 0 24px rgba(0,240,255,.3);transform:translateY(-2px)}
 .scroll-indicator{
   position:absolute;bottom:48px;left:50%;transform:translateX(-50%);
   display:flex;flex-direction:column;align-items:center;gap:8px;
@@ -383,7 +392,7 @@ nav{
 .mctrl-btn{width:30px;height:30px;border-radius:50%;border:1px solid rgba(0,240,255,.18);background:rgba(0,240,255,.04);color:#8888aa;font-size:.65rem;cursor:pointer;transition:all .3s;display:flex;align-items:center;justify-content:center;padding:0}
 .mctrl-btn:hover{color:#00f0ff;border-color:#00f0ff;box-shadow:0 0 10px rgba(0,240,255,.15)}
 .mctrl-btn.mctrl-play{width:38px;height:38px;font-size:.85rem;background:rgba(0,240,255,.1)}
-.mctrl-vol{width:50px;height:4px;-webkit-appearance:none;appearance:none;background:rgba(255,255,255,.1);border-radius:2px;outline:none;cursor:pointer}
+.mctrl-vol{width:80px;height:5px;-webkit-appearance:none;appearance:none;background:rgba(255,255,255,.12);border-radius:3px;outline:none;cursor:pointer}
 .mctrl-vol::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:12px;border-radius:50%;background:#00f0ff;cursor:pointer}
 .music-lyrics{max-height:90px;overflow-y:auto;text-align:center;font-size:.72rem;color:#8888aa;line-height:1.8;margin-bottom:10px;padding:6px;border-radius:6px;background:rgba(0,240,255,.03);border:1px solid rgba(0,240,255,.05)}
 .music-lyrics .lrc-cur{color:#00f0ff;font-weight:600;font-size:.82rem}
@@ -473,6 +482,9 @@ footer span{color:#00f0ff}
     <span>LLM</span><span>Prompt Engineering</span><span>Agent</span><span>Game Tools</span><span>Creative Coding</span>
   </div>
   <p class="hero-signature word-reveal" style="animation-delay:950ms">"准备得太久，你就没有办法开始"</p>
+  <div class="hero-cta-wrap word-reveal" style="animation-delay:1.1s">
+    <a class="hero-cta-btn" onclick="document.getElementById('tab-ai').scrollIntoView({behavior:'smooth',block:'start'})">进入博客</a>
+  </div>
   <div class="scroll-indicator">
     <div class="scroll-line"></div>
   </div>
@@ -839,10 +851,8 @@ var gunCodes = {
   ]
 };
 
-// Roulette guns (initial set)
-var rouletteGuns = [
-  "AR-57","K416","AK","M7 (综合版)","MP7 (经济版)","AWM (高操控)"
-];
+// Roulette guns - user adds their own
+var rouletteGuns = [];
 
 // === INIT ===
 var audio = new Audio();
