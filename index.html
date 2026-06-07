@@ -1305,7 +1305,8 @@ function showSectionArticles(cat){
   }else{
     list.innerHTML=articles.map(function(a){
       var artId=fullArticles.findIndex(function(f){return f.title===a.title});
-      var clickHandler=artId>=0?' onclick=\"var m=document.getElementById(\\'sectionModal\\');m.style.display=\\'none\\';openArticle('+artId+')\" style=\"cursor:pointer\"':'';
+      var clickHandler='';
+      if(artId>=0){clickHandler=' onclick=\"sectionClick('+artId+')\" style=\"cursor:pointer\"'}
       var tagsHtml=(a.tags||[]).map(function(t){return '<span style=\"font-size:.7rem;color:#555577;border:1px solid rgba(0,240,255,.12);padding:2px 8px;border-radius:10px\">'+t+'</span>'}).join('');
       return '<div'+clickHandler+' style=\"background:rgba(10,10,30,.5);border:1px solid rgba(0,240,255,.08);border-radius:14px;padding:20px;margin-bottom:12px\">'+
         '<h3 style=\"color:#00f0ff;font-size:1.05rem;margin-bottom:6px\">'+(artId>=0?'&#128279; ':'')+a.title+'</h3>'+
@@ -1339,6 +1340,7 @@ function openArticle(id){
   m.style.display='flex';
 }
 
+function sectionClick(id){document.getElementById('sectionModal').style.display='none';openArticle(id)}
 function showQR(type){
   var m=document.getElementById('qrModal');
   var img=document.getElementById('qrImage');
