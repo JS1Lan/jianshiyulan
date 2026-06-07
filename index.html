@@ -1255,6 +1255,11 @@ setupReveals();
 
 // Initial draw
 drawWheel();
+
+// Register Service Worker for music caching
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('sw.js').catch(function(){});
+}
 </script>
 
 <!-- QR Modal -->
