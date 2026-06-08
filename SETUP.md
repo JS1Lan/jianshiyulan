@@ -17,18 +17,23 @@ cd jianshiyulan
 
 VS Code 扩展商店搜 Claude Code 安装。
 
-## 4. 装 Superpowers Skills（前端 UI 设计等全在里面）
+## 4. 装技能
 
-在 Claude Code 对话框中输入：
+### 4a. Superpowers Skills
 
 ```
 /install superpowers
 ```
 
-这会自动装上：
-- **ui-ux-pro-max** — 67 种 UI 风格、96 色板、57 字体配对
-- **frontend-design** — 创建高质量前端界面
-- brainstorming、writing-plans、subagent-driven-development 等全部技能
+装上：ui-ux-pro-max、frontend-design、brainstorming、writing-plans 等。
+
+### 4b. Taste-Skill（优先使用的前端设计技能）
+
+```bash
+npx skills add https://github.com/Leonxlnx/taste-skill
+```
+
+装上 13 个设计技能：design-taste-frontend（主技能，v2）、high-end-visual-design、minimalist-ui、industrial-brutalist-ui、redesign-existing-projects、image-to-code 等。做 UI 设计时优先调用 design-taste-frontend。
 
 ## 5. 配置 vision.js 识图工具
 
