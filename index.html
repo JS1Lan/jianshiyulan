@@ -599,31 +599,26 @@ footer span{color:#00f0ff}
       <h3>Claude Code 接入 DeepSeek 完整教程</h3>
       <p>完整教程含两个版本：顺畅极简版与踩坑详解版，覆盖9个常见踩坑点。</p>
       <span class="empty-tag" style="color:#00f0ff;border-color:rgba(0,240,255,.3)">阅读全文</span></div>
-    <div class="article-card reveal">
-      <div class="meta">即将更新</div>
-      <h3>LLM 提示工程实战：结构化输出的 7 种模式</h3>
-      <p>从 JSON 模式到函数调用，对比不同模型的提示策略与输出一致性方案。</p>
-      <span class="empty-tag">撰文中</span></div>
-    <div class="article-card reveal">
-      <div class="meta">即将更新</div>
-      <h3>Vision.js: 自建图像识别工具，为 AI Agent 装上眼睛</h3>
-      <p>基于 Qwen-VL-Max 的 Node.js 工具开发记录，支持本地与远程图片分析。</p>
-      <span class="empty-tag">撰文中</span></div>
-    <div class="article-card reveal">
-      <div class="meta">即将更新</div>
-      <h3>AI 工作流自动化：从想法到落地</h3>
-      <p>Multi-agent 任务编排实践经验分享，自动化你的日常事务处理。</p>
-      <span class="empty-tag">撰文中</span></div>
-    <div class="article-card reveal">
-      <div class="meta">即将更新</div>
-      <h3>三角洲行动：从入门到精通</h3>
-      <p>地图解析、枪械搭配、战术思路，新手友好的游戏攻略系列。</p>
-      <span class="empty-tag">撰文中</span></div>
-    <div class="article-card reveal">
-      <div class="meta">即将更新</div>
-      <h3>个人博客搭建全记录</h3>
-      <p>从零设计到部署上线，玻璃拟态到赛博霓虹的 UI 进化之路。</p>
-      <span class="empty-tag">撰文中</span></div>
+    <div class="article-card reveal" onclick="openArticle(1)">
+      <div class="meta">2026-06-08 . 心得体会</div>
+      <h3>VS Code + Claude Code 插件安装完全指南（新手版）</h3>
+      <p>从零开始的 VS Code 与 Claude Code 插件安装教程，涵盖 Node.js、Git 环境配置及 DeepSeek 模型对接完整流程。</p>
+      <span class="empty-tag" style="color:#00f0ff;border-color:rgba(0,240,255,.3)">阅读全文</span></div>
+    <div class="article-card reveal" onclick="openArticle(2)">
+      <div class="meta">2026-06-08 . 心得体会</div>
+      <h3>简单聊聊 Claude Code 里的 Skills</h3>
+      <p>用通俗的方式讲清楚 Skills 是什么、什么时候用、怎么挑选，帮你理性选择适合自己的技能工具。</p>
+      <span class="empty-tag" style="color:#00f0ff;border-color:rgba(0,240,255,.3)">阅读全文</span></div>
+    <div class="article-card reveal" onclick="openArticle(3)">
+      <div class="meta">2026-06-08 . 心得体会</div>
+      <h3>Superpowers 技能介绍 - 帮你规范使用 AI 写代码</h3>
+      <p>全面介绍 Superpowers 的 14 项技能，从需求梳理到代码收尾，帮你规范 AI 编码流程。</p>
+      <span class="empty-tag" style="color:#00f0ff;border-color:rgba(0,240,255,.3)">阅读全文</span></div>
+    <div class="article-card reveal" onclick="openArticle(4)">
+      <div class="meta">2026-06-08 . 心得体会</div>
+      <h3>DeepSeek V4 Pro 识图能力实测分享</h3>
+      <p>实测 DeepSeek V4 Pro 的图像识别能力，分享通过 claude-vision-skill 让模型具备识图功能的方法。</p>
+      <span class="empty-tag" style="color:#00f0ff;border-color:rgba(0,240,255,.3)">阅读全文</span></div>
   </div>
 
   <div class="neon-divider reveal"></div>
@@ -636,7 +631,7 @@ footer span{color:#00f0ff}
       <div class="stat-label">知识笔记</div>
     </div>
     <div class="stat-card reveal" onclick="showSectionArticles('thoughts')">
-      <div class="stat-number" id="count-thoughts">1</div>
+      <div class="stat-number" id="count-thoughts">5</div>
       <div class="stat-label">心得体会</div>
     </div>
     <div class="stat-card reveal" onclick="showSectionArticles('skills')">
@@ -886,7 +881,19 @@ var sectionArticles = {
   thoughts: [
     {title:"Claude Code 接入 DeepSeek 完整教程", date:"2026-06-07",
      desc:"完整教程含两个版本：顺畅极简版（无报错路线）与踩坑详解版。从 Node.js 安装到 CC-Switch 配置，覆盖9个常见踩坑点的完整排查方案。",
-     tags:["DeepSeek","Claude Code","CC-Switch","API配置","模型接入"]}
+     tags:["DeepSeek","Claude Code","CC-Switch","API配置","模型接入"]},
+    {title:"VS Code + Claude Code 插件安装完全指南（新手版）", date:"2026-06-08",
+     desc:"从零开始的 VS Code 与 Claude Code 插件安装教程，涵盖 Node.js、Git 环境配置及 DeepSeek 模型对接完整流程。",
+     tags:["VS Code","Claude Code","插件安装","新手教程","开发环境"]},
+    {title:"简单聊聊 Claude Code 里的 Skills", date:"2026-06-08",
+     desc:"用通俗的方式讲清楚 Skills 是什么、什么时候用、怎么挑选，帮你理性选择适合自己的技能工具。",
+     tags:["Claude Code","Skills","开发工具","AI编程"]},
+    {title:"Superpowers 技能介绍 - 帮你规范使用 AI 写代码", date:"2026-06-08",
+     desc:"全面介绍 Superpowers 的 14 项技能，从需求梳理到代码收尾，帮你规范 AI 编码流程。",
+     tags:["Superpowers","Claude Code","Skills","AI开发","工作流"]},
+    {title:"DeepSeek V4 Pro 识图能力实测分享", date:"2026-06-08",
+     desc:"实测 DeepSeek V4 Pro 的图像识别能力，分享通过 claude-vision-skill 让模型具备识图功能的方法。",
+     tags:["DeepSeek","V4 Pro","图像识别","Claude Code","CC-Switch"]}
   ],
   skills: [], // 自制Skills
   projects: [] // 我的Project
