@@ -1416,18 +1416,25 @@ function showSectionArticles(cat){
   if(articles.length===0){
     list.innerHTML='<p style=\"color:#555577;text-align:center;padding:40px\">暂无文章，敬请期待</p>';
   }else{
-    list.innerHTML=articles.map(function(a){
+    list.innerHTML='';
+    articles.forEach(function(a){
       var artId=fullArticles.findIndex(function(f){return f.title===a.title});
-      var clickHandler='';
-      if(artId>=0){clickHandler=' onclick=\"sectionClick('+artId+')\" style=\"cursor:pointer\"'}
-      var tagsHtml=(a.tags||[]).map(function(t){return '<span style=\"font-size:.7rem;color:#555577;border:1px solid rgba(0,240,255,.12);padding:2px 8px;border-radius:10px\">'+t+'</span>'}).join('');
-      return '<div'+clickHandler+' style=\"background:rgba(10,10,35,.88);border:1px solid rgba(0,240,255,.15);border-radius:14px;padding:20px;margin-bottom:12px\">'+
-        '<h3 style=\"color:#00f0ff;font-size:1.05rem;margin-bottom:6px\">'+(artId>=0?'&#128279; ':'')+a.title+'</h3>'+
-        '<p style=\"color:#8888aa;font-size:.82rem;line-height:1.6;margin-bottom:10px\">'+a.desc+'</p>'+
-        (tagsHtml?'<div style=\"display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px\">'+tagsHtml+'</div>':'')+
-        '<span style=\"font-size:.72rem;color:#555577\">'+a.date+'</span>'+
-      '</div>';
-    }).join('');
+      var div=document.createElement('div');
+      var bg=artId>=0?'rgba(12,14,28,.98)':'rgba(12,14,28,.6)';
+      div.style.cssText='background:'+bg+';border:1px solid rgba(0,240,255,'+(artId>=0?.18:.08)+');border-radius:16px;padding:22px 24px;margin-bottom:16px;transition:all .3s';
+      if(artId>=0){
+        div.style.cursor='pointer';
+        div.onmouseenter=function(){this.style.borderColor='rgba(0,240,255,.4)';this.style.boxShadow='0 4px 20px rgba(0,240,255,.1)';this.style.transform='translateY(-2px)'};
+        div.onmouseleave=function(){this.style.borderColor='rgba(0,240,255,.18)';this.style.boxShadow='none';this.style.transform='none'};
+        (function(id){div.onclick=function(){sectionClick(id)}})(artId);
+      }
+      var tagsHtml=(a.tags||[]).map(function(t){return '<span style=\"font-size:.7rem;color:#00f0ff;border:1px solid rgba(0,240,255,.18);padding:3px 10px;border-radius:12px\">'+t+'</span>'}).join('');
+      div.innerHTML='<h3 style=\"color:#e8e8f0;font-size:1.1rem;font-weight:700;margin-bottom:8px\">'+(artId>=0?'&#128214; ':'')+a.title+'</h3>'+
+        '<p style=\"color:#9090a0;font-size:.85rem;line-height:1.65;margin-bottom:12px\">'+a.desc+'</p>'+
+        (tagsHtml?'<div style=\"display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px\">'+tagsHtml+'</div>':'')+
+        '<span style=\"font-size:.75rem;color:#555577\">'+a.date+'</span>';
+      list.appendChild(div);
+    });
   }
   m.style.display='flex';
 }
