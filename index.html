@@ -1421,7 +1421,7 @@ function showSectionArticles(cat){
       var clickHandler='';
       if(artId>=0){clickHandler=' onclick=\"sectionClick('+artId+')\" style=\"cursor:pointer\"'}
       var tagsHtml=(a.tags||[]).map(function(t){return '<span style=\"font-size:.7rem;color:#555577;border:1px solid rgba(0,240,255,.12);padding:2px 8px;border-radius:10px\">'+t+'</span>'}).join('');
-      return '<div'+clickHandler+' style=\"background:rgba(10,10,30,.5);border:1px solid rgba(0,240,255,.08);border-radius:14px;padding:20px;margin-bottom:12px\">'+
+      return '<div'+clickHandler+' style=\"background:rgba(10,10,35,.88);border:1px solid rgba(0,240,255,.15);border-radius:14px;padding:20px;margin-bottom:12px\">'+
         '<h3 style=\"color:#00f0ff;font-size:1.05rem;margin-bottom:6px\">'+(artId>=0?'&#128279; ':'')+a.title+'</h3>'+
         '<p style=\"color:#8888aa;font-size:.82rem;line-height:1.6;margin-bottom:10px\">'+a.desc+'</p>'+
         (tagsHtml?'<div style=\"display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px\">'+tagsHtml+'</div>':'')+
@@ -1453,6 +1453,39 @@ function openArticle(id){
   // Set content
   document.getElementById('artContent').innerHTML=a.content;
 
+  // Auto-upgrade paragraph-style headings to proper heading tags
+  var artBody=document.getElementById('artContent');
+  var allP=artBody.querySelectorAll('p');
+  allP.forEach(function(p){
+    var txt=p.textContent.trim();
+    // Chinese numbered headings: 一、二、...  or  第一章  etc
+    if(/^[一二三四五六七八九十]、/.test(txt)||/^第[一二三四五六七八九十百千]/.test(txt)){
+      p.outerHTML='<h3>'+txt+'</h3>';
+    }
+    // Bullet-point style headings with colon
+    else if(/^[1-9]、|^坑点\s*\d/.test(txt)||/^[1-9]\.\s/.test(txt)){
+      p.outerHTML='<h4>'+txt+'</h4>';
+    }
+    // Bold-looking lines (short, with colon)
+    else if(txt.length<30&&/[：:]$/.test(txt)&&txt.indexOf('http')<0){
+      p.outerHTML='<h4>'+txt+'</h4>';
+    }
+  });
+
+  // Boost any element that looks like a heading but is still a <p>
+  setTimeout(function(){
+    var leftover=artBody.querySelectorAll('p');
+    leftover.forEach(function(p){
+      var txt=p.textContent.trim();
+      if(txt.length<25&&!/[。，]$/.test(txt)&&!/^[a-z]/.test(txt)&&!/http/.test(txt)){
+        var bold=window.getComputedStyle(p).fontWeight;
+        if(parseInt(bold)>=700||bold==='bold'){
+          p.outerHTML='<h4>'+txt+'</h4>';
+        }
+      }
+    });
+  },100);
+
   // Build TOC from h2/h3/h4 in content
   var toc=document.getElementById('tocLinks');
   toc.innerHTML='';
@@ -1472,6 +1505,8 @@ function openArticle(id){
 
   overlay.classList.add('open');
   document.body.style.overflow='hidden';
+  // Reset scroll to top
+  setTimeout(function(){document.getElementById('articleContentArea').scrollTop=0},50);
 
   // Track active heading via IntersectionObserver
   var tocObserver=new IntersectionObserver(function(entries){
