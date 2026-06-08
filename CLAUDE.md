@@ -4,6 +4,12 @@
 - 线上：https://js1lan.github.io/jianshiyulan/
 - 仓库：https://github.com/JS1Lan/jianshiyulan
 
+## 首次使用前安装
+```bash
+npx skills add https://github.com/Leonxlnx/taste-skill
+```
+在 Claude Code 中输入：`/install superpowers`
+
 ## 环境要求
 - 前端设计优先使用 taste-skill (design-taste-frontend)
 - 生成内容必须中文
