@@ -639,7 +639,7 @@ footer span{color:#00f0ff}
       <div class="stat-label">自制Skills</div>
     </div>
     <div class="stat-card reveal" onclick="showSectionArticles('projects')">
-      <div class="stat-number" id="count-projects">0</div>
+      <div class="stat-number" id="count-projects">3</div>
       <div class="stat-label">我的Project</div>
     </div>
   </div>
@@ -904,7 +904,20 @@ var sectionArticles = {
   {title:"DeepSeek V4 Pro 识图能力实测分享",date:"2026-06-08",category:"thoughts",desc:"实测 DeepSeek V4 Pro 配合 CC-Switch 在 Claude Code 中的图像识别能力与实用场景。",tags:["DeepSeek","V4 Pro","图像识别","Claude Code","CC-Switch"]}
 ],
   skills: [], // 自制Skills
-  projects: [] // 我的Project
+  projects: [
+    {name:"未完", type:"Android APP", date:"2026",
+     desc:"高效任务管理与待办清单工具，支持分类整理、优先级标记和进度追踪，帮助你把每件事都做完。",
+     tags:["任务管理","待办清单","效率工具"],
+     link:"https://pan.baidu.com/s/1l_b-0tSlWdJ-wJn4QCNNVg?pwd=jsyl",linkLabel:"百度网盘（提取码: jsyl）"},
+    {name:"时衡集", type:"Android APP", date:"2026",
+     desc:"智能时间管理应用，集日程规划、番茄钟、专注统计于一体，让你重新掌控每天的节奏。",
+     tags:["时间管理","日程规划","番茄钟"],
+     link:"https://pan.baidu.com/s/1aOBNRLM98AVVUXV8m3JChQ?pwd=jsyl",linkLabel:"百度网盘（提取码: jsyl）"},
+    {name:"家居物品位置记录器", type:"Android APP", date:"2026",
+     desc:"记录家中每件物品的存放位置，拍照标记+分类搜索，再也不用翻箱倒柜找东西。",
+     tags:["收纳管理","物品定位","家居工具"],
+     link:"https://pan.baidu.com/s/1s4SXPZjEjGP3xH1kflhKsQ?pwd=jsyl",linkLabel:"百度网盘（提取码: jsyl）"}
+  ]
 };
 
 // Music playlist - loaded from playlist.json (75 songs)
@@ -1420,19 +1433,27 @@ function showSectionArticles(cat){
     articles.forEach(function(a){
       var artId=fullArticles.findIndex(function(f){return f.title===a.title});
       var div=document.createElement('div');
-      var bg=artId>=0?'rgba(12,14,28,.98)':'rgba(12,14,28,.6)';
-      div.style.cssText='background:'+bg+';border:1px solid rgba(0,240,255,'+(artId>=0?.18:.08)+');border-radius:16px;padding:22px 24px;margin-bottom:16px;transition:all .3s';
+      var hasContent=artId>=0||a.link;
+      var bg=hasContent?'rgba(12,14,28,.98)':'rgba(12,14,28,.6)';
+      div.style.cssText='background:'+bg+';border:1px solid rgba(0,240,255,'+(hasContent?.18:.08)+');border-radius:16px;padding:22px 24px;margin-bottom:16px;transition:all .3s';
       if(artId>=0){
         div.style.cursor='pointer';
         div.onmouseenter=function(){this.style.borderColor='rgba(0,240,255,.4)';this.style.boxShadow='0 4px 20px rgba(0,240,255,.1)';this.style.transform='translateY(-2px)'};
         div.onmouseleave=function(){this.style.borderColor='rgba(0,240,255,.18)';this.style.boxShadow='none';this.style.transform='none'};
         (function(id){div.onclick=function(){sectionClick(id)}})(artId);
+      }else if(a.link){
+        div.onmouseenter=function(){this.style.borderColor='rgba(0,240,255,.4)';this.style.boxShadow='0 4px 20px rgba(0,240,255,.1)';this.style.transform='translateY(-2px)'};
+        div.onmouseleave=function(){this.style.borderColor='rgba(0,240,255,.18)';this.style.boxShadow='none';this.style.transform='none'};
       }
+      var title=a.title||a.name||'';
       var tagsHtml=(a.tags||[]).map(function(t){return '<span style=\"font-size:.7rem;color:#00f0ff;border:1px solid rgba(0,240,255,.18);padding:3px 10px;border-radius:12px\">'+t+'</span>'}).join('');
-      div.innerHTML='<h3 style=\"color:#e8e8f0;font-size:1.1rem;font-weight:700;margin-bottom:8px\">'+(artId>=0?'&#128214; ':'')+a.title+'</h3>'+
-        '<p style=\"color:#9090a0;font-size:.85rem;line-height:1.65;margin-bottom:12px\">'+a.desc+'</p>'+
-        (tagsHtml?'<div style=\"display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px\">'+tagsHtml+'</div>':'')+
-        '<span style=\"font-size:.75rem;color:#555577\">'+a.date+'</span>';
+      var typeHtml=a.type?'<span style=\"font-size:.72rem;color:#ff00aa;margin-right:10px\">'+a.type+'</span>':'';
+      var linkHtml=a.link?'<a href=\"'+a.link+'\" target=\"_blank\" style=\"color:#00f0ff;font-size:.78rem;text-decoration:none;border:1px solid rgba(0,240,255,.2);padding:4px 12px;border-radius:8px;display:inline-block;margin-top:8px\" onclick=\"event.stopPropagation()\">'+a.linkLabel+'</a>':'';
+      div.innerHTML='<h3 style=\"color:#e8e8f0;font-size:1.1rem;font-weight:700;margin-bottom:8px\">'+(artId>=0?'&#128214; ':'&#128187; ')+title+'</h3>'+
+        '<p style=\"color:#9090a0;font-size:.85rem;line-height:1.65;margin-bottom:10px\">'+a.desc+'</p>'+
+        (tagsHtml?'<div style=\"display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px\">'+tagsHtml+'</div>':'')+
+        '<div style=\"display:flex;align-items:center;flex-wrap:wrap;gap:8px\">'+typeHtml+'<span style=\"font-size:.75rem;color:#555577\">'+a.date+'</span></div>'+
+        linkHtml;
       list.appendChild(div);
     });
   }
