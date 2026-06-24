@@ -28,7 +28,18 @@
     "text": "如果我的分享对你有帮助，欢迎请我喝杯咖啡 ☕",
     "textEn": "If my work helps you, buy me a coffee ☕"
   },
-  "articles": [],
+  "articles": [
+    {
+      "id": 1,
+      "title": "CC Switch下载与DeepSeek配置完全指南",
+      "category": "log",
+      "tag": "CC Switch",
+      "date": "2026-06-06",
+      "desc": "从零开始教你下载安装CC Switch，并配置DeepSeek API，实现跨平台AI模型管理。",
+      "featured": true,
+      "content": "# CC Switch下载与DeepSeek配置完全指南\n\n## 一、CC Switch是什么？\nCC Switch是一款跨平台的开源桌面应用，用于统一管理Claude Code、Codex、Gemini CLI等AI编程工具的模型配置。简单来说，它像一个\"AI模型切换器\"——你把各个模型的API Key和接口地址存进去，点一下就能切换，再也不用手动改配置文件了。\n\nCC Switch内置了50多家供应商的预设配置，选择预设后只需填写API Key即可使用。目前支持管理Claude Code、Codex、Gemini CLI、OpenCode、OpenClaw等主流AI编程工具。\n\n## 二、下载与安装\nCC Switch支持Windows、macOS和Linux三大平台。访问 [GitHub Releases](https://github.com/farion1231/cc-switch/releases) 即可下载最新版本。\n\n### Windows\n**方式一：MSI安装包（推荐）**。下载 `CC-Switch-v{版本号}-Windows.msi` 安装包，双击运行安装程序，按向导完成安装。建议将安装路径从默认的C盘修改至非系统盘（如D盘），避免系统盘空间不足。\n\n**方式二：绿色便携版（免安装）**。下载 `CC-Switch-v{版本号}-Windows-Portable.zip`，解压到纯英文路径（中文路径可能导致数据库初始化失败），直接运行 `CC-Switch.exe` 即可。\n\n如果遇到Windows SmartScreen拦截，点击\"更多信息\"→\"仍要运行\"即可正常启动。\n\n### macOS\n**方式一：Homebrew安装（推荐）**。执行：\n```\nbrew tap farion1231/ccswitch\nbrew install --cask cc-switch\n```\n\n**方式二：手动安装**。下载 `.dmg` 镜像文件，将 `CC Switch.app` 拖入「应用程序」文件夹。首次启动时若提示\"无法验证开发者\"，前往「系统设置」→「隐私与安全性」，点击「仍要打开」完成授权。\n\n### Linux\n根据发行版选择安装包。Debian/Ubuntu下载 `.deb`，Fedora/RHEL下载 `.rpm`。通用方案是下载 `.AppImage` 文件：\n```\nchmod +x CC-Switch-v{版本号}-Linux.AppImage\n./CC-Switch-v{版本号}-Linux.AppImage\n```\n\n## 三、准备工作：获取DeepSeek API Key\n1. 访问 DeepSeek 平台官网，注册并登录账号\n2. 完成实名认证（国内用户可用支付宝或微信充值，按量计费）\n3. 进入API密钥管理页面，点击「新建API密钥」\n4. 复制并妥善保存生成的API Key（通常以 `sk-` 开头）\n\nDeepSeek官方文档标明的OpenAI兼容接口地址为 `https://api.deepseek.com`，Chat接口路径为 `/chat/completions`。\n\n## 四、在CC Switch中配置DeepSeek\n以配置 Codex CLI 使用 DeepSeek 为例（配置 Claude Code 的操作类似）。\n\n1. **确认版本**：确保CC Switch版本为 3.16.0及以上，该版本起内置了DeepSeek预设\n2. **切换应用标签**：在顶部应用切换器中，根据目标工具选择对应标签（如Codex）\n3. **添加供应商**：点击「+」按钮，在预设列表中选择「DeepSeek」，接口地址和默认模型自动填充，粘贴API Key后保存\n4. **开启本地路由（Codex用户）**：进入「设置」→「路由」页面，开启本地路由总开关（127.0.0.1:15721），在路由启用中打开Codex选项\n5. **验证配置**：在CLI工具中发起请求，检查是否能正常返回结果\n\n> 本地路由的作用：Codex原生只支持OpenAI的Responses API，而DeepSeek使用Chat Completions API，CC Switch在中间完成协议转换。\n\n## 五、配置完成后能做什么？\n- 一键切换模型：在CC Switch主界面或系统托盘中秒级切换不同供应商\n- 添加更多模型：通义千问、Kimi等，同样的操作只需30秒\n- 集中管理配置：所有API Key和模型配置统一存放，安全且便于管理\n\n## 六、注意事项\n1. **Node.js环境**：CC Switch和Claude Code、Codex等工具都依赖Node.js环境，建议提前安装Node.js 18+\n2. **CLI工具需提前安装**：CC Switch是配置管理工具，需先安装好对应的CLI工具\n3. **切换后需重启终端**：让新的环境变量生效\n4. **API Key安全**：CC Switch将API Key保存在本地，不会上传到任何服务器\n5. **DeepSeek计费**：采用按量计费模式，API调用会产生费用"
+    }
+  ],
   "skills": [],
   "deltaForce": {
     "date": "2026-06-04",
